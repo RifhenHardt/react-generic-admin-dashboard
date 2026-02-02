@@ -25,6 +25,12 @@ const initializeData = () => {
   if (!getFromStorage('categories')) {
     saveToStorage('categories', mockData.categories);
   }
+  if (!getFromStorage('users')) {
+    saveToStorage('users', mockData.users);
+  }
+  if (!getFromStorage('orders')) {
+    saveToStorage('orders', mockData.orders);
+  }
 };
 
 initializeData();

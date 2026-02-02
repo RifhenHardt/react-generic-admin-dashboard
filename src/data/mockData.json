@@ -143,5 +143,689 @@
       "attributesCount": 3,
       "isActive": false
     }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "email": "john.smith@email.com",
+      "role": "admin",
+      "joinedDate": "2024-03-15",
+      "lastActive": "2025-01-20",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 2,
+      "name": "Emma Wilson",
+      "email": "emma.wilson@email.com",
+      "role": "moderator",
+      "joinedDate": "2024-04-10",
+      "lastActive": "2025-01-19",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 3,
+      "name": "Michael Brown",
+      "email": "michael.b@email.com",
+      "role": "user",
+      "joinedDate": "2024-05-22",
+      "lastActive": "2025-01-18",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 4,
+      "name": "Sarah Davis",
+      "email": "sarah.davis@email.com",
+      "role": "user",
+      "joinedDate": "2024-06-05",
+      "lastActive": "2025-01-17",
+      "status": "inactive",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 5,
+      "name": "David Johnson",
+      "email": "david.j@email.com",
+      "role": "user",
+      "joinedDate": "2024-06-18",
+      "lastActive": "2025-01-16",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 6,
+      "name": "Jennifer Lee",
+      "email": "jennifer.lee@email.com",
+      "role": "user",
+      "joinedDate": "2024-07-02",
+      "lastActive": "2025-01-15",
+      "status": "suspended",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 7,
+      "name": "Robert Wilson",
+      "email": "robert.w@email.com",
+      "role": "user",
+      "joinedDate": "2024-07-15",
+      "lastActive": "2025-01-14",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 8,
+      "name": "Lisa Anderson",
+      "email": "lisa.a@email.com",
+      "role": "moderator",
+      "joinedDate": "2024-07-28",
+      "lastActive": "2025-01-13",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 9,
+      "name": "James Taylor",
+      "email": "james.t@email.com",
+      "role": "user",
+      "joinedDate": "2024-08-10",
+      "lastActive": "2025-01-12",
+      "status": "inactive",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 10,
+      "name": "Maria Garcia",
+      "email": "maria.g@email.com",
+      "role": "user",
+      "joinedDate": "2024-08-23",
+      "lastActive": "2025-01-11",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 11,
+      "name": "William Harris",
+      "email": "william.h@email.com",
+      "role": "user",
+      "joinedDate": "2024-09-05",
+      "lastActive": "2025-01-10",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 12,
+      "name": "Elizabeth Martin",
+      "email": "elizabeth.m@email.com",
+      "role": "user",
+      "joinedDate": "2024-09-18",
+      "lastActive": "2025-01-09",
+      "status": "suspended",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 13,
+      "name": "Richard Clark",
+      "email": "richard.c@email.com",
+      "role": "user",
+      "joinedDate": "2024-10-01",
+      "lastActive": "2025-01-08",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 14,
+      "name": "Susan Rodriguez",
+      "email": "susan.r@email.com",
+      "role": "user",
+      "joinedDate": "2024-10-14",
+      "lastActive": "2025-01-07",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 15,
+      "name": "Joseph Lewis",
+      "email": "joseph.l@email.com",
+      "role": "user",
+      "joinedDate": "2024-10-27",
+      "lastActive": "2025-01-06",
+      "status": "inactive",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 16,
+      "name": "Margaret Walker",
+      "email": "margaret.w@email.com",
+      "role": "user",
+      "joinedDate": "2024-11-09",
+      "lastActive": "2025-01-05",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 17,
+      "name": "Thomas Hall",
+      "email": "thomas.h@email.com",
+      "role": "moderator",
+      "joinedDate": "2024-11-22",
+      "lastActive": "2025-01-04",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 18,
+      "name": "Dorothy Allen",
+      "email": "dorothy.a@email.com",
+      "role": "user",
+      "joinedDate": "2024-12-05",
+      "lastActive": "2025-01-03",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 19,
+      "name": "Christopher Young",
+      "email": "chris.y@email.com",
+      "role": "user",
+      "joinedDate": "2024-12-18",
+      "lastActive": "2025-01-02",
+      "status": "suspended",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 20,
+      "name": "Karen King",
+      "email": "karen.k@email.com",
+      "role": "user",
+      "joinedDate": "2024-12-31",
+      "lastActive": "2025-01-01",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 21,
+      "name": "Daniel Wright",
+      "email": "daniel.w@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-01",
+      "lastActive": "2024-12-31",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 22,
+      "name": "Betty Scott",
+      "email": "betty.s@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-02",
+      "lastActive": "2024-12-30",
+      "status": "inactive",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 23,
+      "name": "Paul Green",
+      "email": "paul.g@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-03",
+      "lastActive": "2024-12-29",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 24,
+      "name": "Helen Baker",
+      "email": "helen.b@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-04",
+      "lastActive": "2024-12-28",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 25,
+      "name": "Mark Nelson",
+      "email": "mark.n@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-05",
+      "lastActive": "2024-12-27",
+      "status": "suspended",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 26,
+      "name": "Sandra Carter",
+      "email": "sandra.c@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-06",
+      "lastActive": "2024-12-26",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 27,
+      "name": "George Mitchell",
+      "email": "george.m@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-07",
+      "lastActive": "2024-12-25",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 28,
+      "name": "Donna Perez",
+      "email": "donna.p@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-08",
+      "lastActive": "2024-12-24",
+      "status": "inactive",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 29,
+      "name": "Edward Roberts",
+      "email": "edward.r@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-09",
+      "lastActive": "2024-12-23",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 30,
+      "name": "Carol Turner",
+      "email": "carol.t@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-10",
+      "lastActive": "2024-12-22",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 31,
+      "name": "Brian Phillips",
+      "email": "brian.p@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-11",
+      "lastActive": "2024-12-21",
+      "status": "suspended",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 32,
+      "name": "Rebecca Campbell",
+      "email": "rebecca.c@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-12",
+      "lastActive": "2024-12-20",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 33,
+      "name": "Kevin Parker",
+      "email": "kevin.p@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-13",
+      "lastActive": "2024-12-19",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 34,
+      "name": "Amanda Evans",
+      "email": "amanda.e@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-14",
+      "lastActive": "2024-12-18",
+      "status": "inactive",
+      "avatar": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 35,
+      "name": "Steven Edwards",
+      "email": "steven.e@email.com",
+      "role": "user",
+      "joinedDate": "2025-01-15",
+      "lastActive": "2024-12-17",
+      "status": "active",
+      "avatar": "https://via.placeholder.com/50"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "orderId": "ORD-1001",
+      "customer": "John Smith",
+      "product": "iPhone 14 Pro Max",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 1099.99,
+      "orderDate": "2025-01-15",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "orderId": "ORD-1002",
+      "customer": "Emma Wilson",
+      "product": "Dell XPS 15",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 1499.99,
+      "orderDate": "2025-01-14",
+      "status": "processing"
+    },
+    {
+      "id": 3,
+      "orderId": "ORD-1003",
+      "customer": "Michael Brown",
+      "product": "Sony WH-1000XM5",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 2,
+      "price": 399.98,
+      "orderDate": "2025-01-13",
+      "status": "shipped"
+    },
+    {
+      "id": 4,
+      "orderId": "ORD-1004",
+      "customer": "Sarah Davis",
+      "product": "Nintendo Switch",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 299.99,
+      "orderDate": "2025-01-12",
+      "status": "delivered"
+    },
+    {
+      "id": 5,
+      "orderId": "ORD-1005",
+      "customer": "David Johnson",
+      "product": "Samsung Galaxy S23",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 799.99,
+      "orderDate": "2025-01-11",
+      "status": "cancelled"
+    },
+    {
+      "id": 6,
+      "orderId": "ORD-1006",
+      "customer": "Jennifer Lee",
+      "product": "MacBook Pro 16\"",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 2399.99,
+      "orderDate": "2025-01-10",
+      "status": "pending"
+    },
+    {
+      "id": 7,
+      "orderId": "ORD-1007",
+      "customer": "Robert Wilson",
+      "product": "iPad Air",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 599.99,
+      "orderDate": "2025-01-09",
+      "status": "processing"
+    },
+    {
+      "id": 8,
+      "orderId": "ORD-1008",
+      "customer": "Lisa Anderson",
+      "product": "AirPods Pro",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 249.99,
+      "orderDate": "2025-01-08",
+      "status": "shipped"
+    },
+    {
+      "id": 9,
+      "orderId": "ORD-1009",
+      "customer": "James Taylor",
+      "product": "PlayStation 5",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 499.99,
+      "orderDate": "2025-01-07",
+      "status": "delivered"
+    },
+    {
+      "id": 10,
+      "orderId": "ORD-1010",
+      "customer": "Maria Garcia",
+      "product": "Xbox Series X",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 499.99,
+      "orderDate": "2025-01-06",
+      "status": "cancelled"
+    },
+    {
+      "id": 11,
+      "orderId": "ORD-1011",
+      "customer": "William Harris",
+      "product": "Google Pixel 8",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 699.99,
+      "orderDate": "2025-01-05",
+      "status": "pending"
+    },
+    {
+      "id": 12,
+      "orderId": "ORD-1012",
+      "customer": "Elizabeth Martin",
+      "product": "Surface Laptop 5",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 1299.99,
+      "orderDate": "2025-01-04",
+      "status": "processing"
+    },
+    {
+      "id": 13,
+      "orderId": "ORD-1013",
+      "customer": "Richard Clark",
+      "product": "Galaxy Watch 6",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 299.99,
+      "orderDate": "2025-01-03",
+      "status": "shipped"
+    },
+    {
+      "id": 14,
+      "orderId": "ORD-1014",
+      "customer": "Susan Rodriguez",
+      "product": "Apple Watch Ultra",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 799.99,
+      "orderDate": "2025-01-02",
+      "status": "delivered"
+    },
+    {
+      "id": 15,
+      "orderId": "ORD-1015",
+      "customer": "Joseph Lewis",
+      "product": "Kindle Paperwhite",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 139.99,
+      "orderDate": "2025-01-01",
+      "status": "cancelled"
+    },
+    {
+      "id": 16,
+      "orderId": "ORD-1016",
+      "customer": "Margaret Walker",
+      "product": "Bose QuietComfort",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 329.99,
+      "orderDate": "2024-12-31",
+      "status": "pending"
+    },
+    {
+      "id": 17,
+      "orderId": "ORD-1017",
+      "customer": "Thomas Hall",
+      "product": "Logitech MX Keys",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 99.99,
+      "orderDate": "2024-12-30",
+      "status": "processing"
+    },
+    {
+      "id": 18,
+      "orderId": "ORD-1018",
+      "customer": "Dorothy Allen",
+      "product": "Canon EOS R5",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 3899.99,
+      "orderDate": "2024-12-29",
+      "status": "shipped"
+    },
+    {
+      "id": 19,
+      "orderId": "ORD-1019",
+      "customer": "Christopher Young",
+      "product": "Nikon Z6 II",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 1999.99,
+      "orderDate": "2024-12-28",
+      "status": "delivered"
+    },
+    {
+      "id": 20,
+      "orderId": "ORD-1020",
+      "customer": "Karen King",
+      "product": "GoPro Hero 12",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 399.99,
+      "orderDate": "2024-12-27",
+      "status": "cancelled"
+    },
+    {
+      "id": 21,
+      "orderId": "ORD-1021",
+      "customer": "Daniel Wright",
+      "product": "DJI Mini 3 Pro",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 759.99,
+      "orderDate": "2024-12-26",
+      "status": "pending"
+    },
+    {
+      "id": 22,
+      "orderId": "ORD-1022",
+      "customer": "Betty Scott",
+      "product": "Fitbit Charge 6",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 159.99,
+      "orderDate": "2024-12-25",
+      "status": "processing"
+    },
+    {
+      "id": 23,
+      "orderId": "ORD-1023",
+      "customer": "Paul Green",
+      "product": "Oculus Quest 3",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 499.99,
+      "orderDate": "2024-12-24",
+      "status": "shipped"
+    },
+    {
+      "id": 24,
+      "orderId": "ORD-1024",
+      "customer": "Helen Baker",
+      "product": "Apple TV 4K",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 129.99,
+      "orderDate": "2024-12-23",
+      "status": "delivered"
+    },
+    {
+      "id": 25,
+      "orderId": "ORD-1025",
+      "customer": "Mark Nelson",
+      "product": "Sonos Beam",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 449.99,
+      "orderDate": "2024-12-22",
+      "status": "cancelled"
+    },
+    {
+      "id": 26,
+      "orderId": "ORD-1026",
+      "customer": "Sandra Carter",
+      "product": "Nest Hub Max",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 229.99,
+      "orderDate": "2024-12-21",
+      "status": "pending"
+    },
+    {
+      "id": 27,
+      "orderId": "ORD-1027",
+      "customer": "George Mitchell",
+      "product": "Ring Doorbell",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 99.99,
+      "orderDate": "2024-12-20",
+      "status": "processing"
+    },
+    {
+      "id": 28,
+      "orderId": "ORD-1028",
+      "customer": "Donna Perez",
+      "product": "Philips Hue",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 3,
+      "price": 179.97,
+      "orderDate": "2024-12-19",
+      "status": "shipped"
+    },
+    {
+      "id": 29,
+      "orderId": "ORD-1029",
+      "customer": "Edward Roberts",
+      "product": "Roomba i7+",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 299.99,
+      "orderDate": "2024-12-18",
+      "status": "delivered"
+    },
+    {
+      "id": 30,
+      "orderId": "ORD-1030",
+      "customer": "Nancy Taylor",
+      "product": "Apple Watch Series 9",
+      "productImage": "https://via.placeholder.com/50",
+      "quantity": 1,
+      "price": 399.99,
+      "orderDate": "2024-12-17",
+      "status": "cancelled"
+    }
   ]
 }

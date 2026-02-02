@@ -38,6 +38,9 @@ export const reportsConfig = {
             src={row.listingImage}
             alt={row.listingTitle}
             className="w-10 h-10 rounded object-cover"
+            onError={(e) => {
+              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iNCIgZmlsbD0iI0VFRUVFRSIvPgo8cGF0aCBkPSJNMTYgMTdDMTcuNjU2OSAxNyAxOSAxNS42NTY5IDE5IDE0QzE5IDEyLjM0MzEgMTcuNjU2OSAxMSAxNiAxMUMxNC4zNDMxIDExIDEzIDEyLjM0MzEgMTMgMTRDMTMgMTUuNjU2OSAxNC4zNDMxIDE3IDE2IDE3WiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNMTYgMTlDMTMuMjM4NiAxOSAxMSAyMS4yMzg2IDExIDI0QzExIDI0LjU1MjMgMTYuMDg1NCAyNC41NTIzIDIxIDI0QzIxIDIxLjIzODYgMTguNzYxNCAxOSAxNiAxOVoiIGZpbGw9IiM5OTk5OTkiLz4KPC9zdmc+';
+            }}
           />
           <span className="font-medium text-gray-900">{row.listingTitle}</span>
         </div>
