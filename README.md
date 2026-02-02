@@ -1,74 +1,55 @@
-# 🚀 Generic Admin Dashboard
+# Generic Admin Dashboard
 
-A **highly reusable** and **generic** admin dashboard template built with **React**, **TailwindCSS 3.4**, and **React Query**. This project allows you to create fully functional CRUD management pages in **minutes** by simply writing configuration objects.
+A reusable admin dashboard template built with React, TailwindCSS 3.4, and React Query. Create fully functional CRUD management pages quickly through configuration objects.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-18.3.1-61dafb.svg)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4.14-38bdf8.svg)
 ![React Query](https://img.shields.io/badge/React_Query-5.56.2-ff4154.svg)
 
-## ✨ Features
+## Features
 
-- ✅ **Generic & Reusable Components** - DataTable, SearchBar, Pagination, Modal, etc.
-- ✅ **Configuration-Based Pages** - Create new management pages with just a config file
-- ✅ **Full CRUD Operations** - Create, Read, Update, Delete out of the box
-- ✅ **Mock API with LocalStorage** - No backend required for development
-- ✅ **Search & Pagination** - Built-in filtering and pagination
-- ✅ **Modern UI with TailwindCSS 3.4** - Beautiful, responsive, and accessible
-- ✅ **React Query Integration** - Efficient data fetching and caching
-- ✅ **Modal Forms** - Dynamic form generation based on config
-- ✅ **Responsive Design** - Works on all screen sizes
-- ✅ **Easy to Extend** - Add new pages in under 10 minutes
+- Generic & Reusable Components - DataTable, SearchBar, Pagination, Modal
+- Configuration-Based Pages - Create management pages with config files
+- Full CRUD Operations - Create, Read, Update, Delete functionality
+- Mock API with LocalStorage - Development without backend requirements
+- Search & Pagination - Built-in filtering and pagination
+- Modern UI with TailwindCSS 3.4 - Responsive and accessible design
+- React Query Integration - Efficient data fetching and caching
+- Modal Forms - Dynamic form generation
+- Responsive Design - Cross-device compatibility
+- Easy to Extend - Add new pages quickly
 
-## 📸 Screenshots
+## Tech Stack
 
-### Listings Management
-![Listings Page](./screenshots/listings.png)
+- React 18.3.1
+- React Router DOM 6.26.2
+- TailwindCSS 3.4.14
+- React Query (@tanstack/react-query) 5.56.2
+- Zustand 4.5.5 (optional, for global state)
+- LocalStorage (Mock API)
 
-### Reports Management
-![Reports Page](./screenshots/reports.png)
-
-### Categories Management
-![Categories Page](./screenshots/categories.png)
-
-## 🛠️ Tech Stack
-
-- **React** 18.3.1
-- **React Router DOM** 6.26.2
-- **TailwindCSS** 3.4.14
-- **React Query** (@tanstack/react-query) 5.56.2
-- **Zustand** 4.5.5 (optional, for global state)
-- **LocalStorage** (Mock API)
-
-## 📦 Installation
+## Installation
 
 ### Prerequisites
-
 - Node.js >= 14.0.0
 - npm or yarn
 
-### Clone & Install
+### Setup
 ```bash
-# Clone the repository
 git clone https://github.com/shadisbaih/react-generic-admin-dashboard.git
-
-# Navigate to project directory
 cd react-generic-admin-dashboard
-
-# Install dependencies
 npm install
-
-# Start development server
 npm start
 ```
 
-The app will open at `http://localhost:3000`
+The application will be available at `http://localhost:3000`
 
-## 🚀 Quick Start
+## Quick Start
 
-### Create a New Management Page in 3 Steps
+### Create a New Management Page
 
-#### 1. Create a Config File
+1. **Create Configuration File**
 ```javascript
 // src/configs/productsConfig.jsx
 export const productsConfig = {
@@ -90,9 +71,9 @@ export const productsConfig = {
   ],
 
   tableActions: ({ onEdit, onDelete }) => [
-    { icon: '👁', onClick: (row) => console.log(row), tooltip: 'View' },
-    { icon: '✏️', onClick: onEdit, tooltip: 'Edit' },
-    { icon: '🗑', onClick: onDelete, tooltip: 'Delete' }
+    { icon: 'View', onClick: (row) => console.log(row), tooltip: 'View' },
+    { icon: 'Edit', onClick: onEdit, tooltip: 'Edit' },
+    { icon: 'Delete', onClick: onDelete, tooltip: 'Delete' }
   ],
 
   formFields: [
@@ -103,7 +84,7 @@ export const productsConfig = {
 };
 ```
 
-#### 2. Create a Page Component
+2. **Create Page Component**
 ```javascript
 // src/pages/ProductsPage.jsx
 import GenericManagementPage from '../components/GenericManagementPage';
@@ -116,15 +97,15 @@ const ProductsPage = () => {
 export default ProductsPage;
 ```
 
-#### 3. Add Route
+3. **Add Route**
 ```javascript
 // src/App.jsx
 <Route path="/products" element={<ProductsPage />} />
 ```
 
-**That's it! 🎉** You now have a fully functional CRUD management page.
+You now have a fully functional CRUD management page.
 
-## 📁 Project Structure
+## Project Structure
 ```
 src/
 ├── components/
@@ -154,11 +135,11 @@ src/
 └── index.css
 ```
 
-## 🎨 Customization
+## Customization
 
 ### Styling
 
-The project uses **TailwindCSS 3.4**. You can customize the theme in `tailwind.config.js`:
+The project uses TailwindCSS 3.4. Customize the theme in `tailwind.config.js`:
 ```javascript
 theme: {
   extend: {
@@ -173,9 +154,9 @@ theme: {
 }
 ```
 
-### Adding Custom Components
+### Custom Components
 
-You can extend any component or create new ones in `src/components/common/`.
+Extend or create new components in `src/components/common/`.
 
 ### Backend Integration
 
@@ -196,7 +177,7 @@ export const apiService = {
 };
 ```
 
-Then update your configs to use the real API.
+Update your configuration files to use the real API service.
 
 ## 📚 Configuration Options
 
