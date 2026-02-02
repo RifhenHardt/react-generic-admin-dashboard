@@ -1,0 +1,147 @@
+{
+  "listings": [
+    {
+      "id": 1,
+      "title": "iPhone 14 Pro Max",
+      "seller": "Eleanor Vance",
+      "sellerVerified": true,
+      "category": "Phone",
+      "submissionDate": "2025-01-15",
+      "status": "pending",
+      "image": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 2,
+      "title": "Dell XPS 15",
+      "seller": "John Smith",
+      "sellerVerified": false,
+      "category": "Laptops",
+      "submissionDate": "2025-01-14",
+      "status": "rejected",
+      "image": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 3,
+      "title": "Sony WH-1000XM5",
+      "seller": "Emma Wilson",
+      "sellerVerified": true,
+      "category": "Audio",
+      "submissionDate": "2025-01-13",
+      "status": "active",
+      "image": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 4,
+      "title": "Nintendo Switch",
+      "seller": "Michael Brown",
+      "sellerVerified": true,
+      "category": "Gaming",
+      "submissionDate": "2025-01-12",
+      "status": "sold",
+      "image": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 5,
+      "title": "Samsung Galaxy S23",
+      "seller": "Sarah Davis",
+      "sellerVerified": true,
+      "category": "Phone",
+      "submissionDate": "2025-01-11",
+      "status": "active",
+      "image": "https://via.placeholder.com/50"
+    }
+  ],
+  "reports": [
+    {
+      "id": 1,
+      "reportId": "#REP-5841",
+      "listingTitle": "iPhone 14 Pro Max",
+      "seller": "William Harris",
+      "sellerWarning": true,
+      "reason": "scam",
+      "submissionDate": "2025-01-15",
+      "listingImage": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 2,
+      "reportId": "#REP-5247",
+      "listingTitle": "Dell XPS 15",
+      "seller": "Benjamin Carter",
+      "sellerWarning": false,
+      "reason": "suspicious behavior",
+      "submissionDate": "2025-01-14",
+      "listingImage": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 3,
+      "reportId": "#REP-3287",
+      "listingTitle": "Sony Headphones",
+      "seller": "Nathaniel Harris",
+      "sellerWarning": false,
+      "reason": "prohibited item",
+      "submissionDate": "2025-01-13",
+      "listingImage": "https://via.placeholder.com/50"
+    },
+    {
+      "id": 4,
+      "reportId": "#REP-1593",
+      "listingTitle": "Nintendo Switch",
+      "seller": "Samuel Brooks",
+      "sellerWarning": false,
+      "reason": "inappropriate content",
+      "submissionDate": "2025-01-12",
+      "listingImage": "https://via.placeholder.com/50"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Phone",
+      "icon": "📱",
+      "attributesCount": 3,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "Tablets",
+      "icon": "💻",
+      "attributesCount": 2,
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "name": "Laptops",
+      "icon": "🖥️",
+      "attributesCount": 5,
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "name": "PC Parts",
+      "icon": "⚙️",
+      "attributesCount": 12,
+      "isActive": true
+    },
+    {
+      "id": 5,
+      "name": "Gaming",
+      "icon": "🎮",
+      "attributesCount": 1,
+      "isActive": true
+    },
+    {
+      "id": 6,
+      "name": "Audio",
+      "icon": "🎧",
+      "attributesCount": 6,
+      "isActive": true
+    },
+    {
+      "id": 7,
+      "name": "Smartwatches",
+      "icon": "⌚",
+      "attributesCount": 3,
+      "isActive": false
+    }
+  ]
+}
