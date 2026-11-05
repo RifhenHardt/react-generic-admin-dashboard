@@ -96,7 +96,7 @@ const GenericManagementPage = ({ config }) => {
     : [];
 
   return (
-    <div className="p-8">
+    <div className="min-w-0 p-4 sm:p-6 lg:p-8">
       <PageHeader title={config.title} actions={headerActions} />
 
       <SearchBar

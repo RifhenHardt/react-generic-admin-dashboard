@@ -32,7 +32,7 @@ export const listingsConfig = {
         <div className="flex items-center gap-2">
           <span className="text-gray-700">{row.seller}</span>
           {row.sellerVerified && (
-            <span className="text-green-500" title="Verified">✓</span>
+            <span className="text-primary-600" title="Verified">✓</span>
           )}
         </div>
       ),

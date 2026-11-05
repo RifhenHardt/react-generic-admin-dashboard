@@ -9,7 +9,8 @@
   }
   
   body {
-    @apply m-0 font-sans antialiased;
+    @apply m-0 font-sans antialiased text-gray-900;
+    background-color: #fffef1;
   }
 }
 
@@ -19,7 +20,7 @@
   }
   
   .btn-secondary {
-    @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors;
+    @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors;
   }
   
   .input-field {

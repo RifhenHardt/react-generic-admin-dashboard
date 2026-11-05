@@ -3,14 +3,14 @@ import React from 'react';
 
 const PageHeader = ({ title, actions }) => {
   return (
-    <div className="mb-8">
+    <div className="mb-6 sm:mb-8">
       <div className="sm:flex sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">{title}</h1>
+          <h1 className="break-words text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{title}</h1>
         </div>
         {actions && actions.length > 0 && (
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {actions.map((action, index) => (
                 <button
                   key={index}

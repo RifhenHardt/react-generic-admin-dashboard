@@ -34,9 +34,9 @@ export const usersConfig = {
       label: 'Role',
       render: (row) => (
         <span className={`px-2 py-1 rounded text-xs font-medium ${
-          row.role === 'admin' ? 'bg-purple-100 text-purple-800' :
-          row.role === 'moderator' ? 'bg-blue-100 text-blue-800' :
-          'bg-green-100 text-green-800'
+          row.role === 'admin' ? 'bg-primary-100 text-primary-800' :
+          row.role === 'moderator' ? 'bg-primary-50 text-primary-700' :
+          'bg-primary-200 text-primary-900'
         }`}>
           {row.role}
         </span>

@@ -1,9 +1,10 @@
 // src/components/Layout.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Layout = ({ children }) => {
   const location = useLocation();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const navItems = [
     { 
@@ -63,10 +64,17 @@ const Layout = ({ children }) => {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="flex w-64 flex-col border-r border-gray-200 bg-white">
-        <div className="flex h-16 shrink-0 items-center gap-x-3 border-b border-gray-200 px-6">
+    <div className="flex min-h-screen bg-gray-100 md:h-screen">
+      {mobileNavOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          className="fixed inset-0 z-40 bg-gray-900/40 md:hidden"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      )}
+      <aside className={`fixed inset-y-0 left-0 z-50 flex w-72 max-w-[85vw] flex-col border-r border-gray-200 bg-white transition-transform md:static md:z-auto md:w-64 md:max-w-none md:translate-x-0 ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex h-16 shrink-0 items-center gap-x-3 border-b border-gray-200 px-5 md:px-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-600">
             <span className="text-xl font-bold text-white">⚡</span>
           </div>
@@ -80,6 +88,7 @@ const Layout = ({ children }) => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setMobileNavOpen(false)}
                 className={`group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 transition-colors ${
                   isActive
                     ? 'bg-gray-50 text-primary-600'
@@ -109,7 +118,21 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto bg-gray-50">
+      <main className="min-w-0 flex-1 bg-gray-50 md:h-screen md:overflow-y-auto">
+        <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-gray-200 bg-white px-4 md:hidden">
+          <button
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded={mobileNavOpen}
+            onClick={() => setMobileNavOpen(true)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100"
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <span className="truncate text-base font-bold text-gray-900">ElectroLink</span>
+        </div>
         {children}
       </main>
     </div>

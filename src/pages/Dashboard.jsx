@@ -3,19 +3,19 @@ import React from 'react';
 
 const Dashboard = () => {
   const stats = [
-    { label: 'Total Listings', value: '156', icon: '📝', color: 'bg-blue-500' },
-    { label: 'Active Reports', value: '23', icon: '⚠️', color: 'bg-yellow-500' },
-    { label: 'Categories', value: '12', icon: '📂', color: 'bg-green-500' },
-    { label: 'Users', value: '1,234', icon: '👥', color: 'bg-purple-500' },
+    { label: 'Total Listings', value: '156', icon: '📝', color: 'bg-primary-700' },
+    { label: 'Active Reports', value: '23', icon: '⚠️', color: 'bg-primary-500' },
+    { label: 'Categories', value: '12', icon: '📂', color: 'bg-primary-300' },
+    { label: 'Users', value: '1,234', icon: '👥', color: 'bg-primary-600' },
   ];
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
+    <div className="min-w-0 p-4 sm:p-6 lg:p-8">
+      <h1 className="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white rounded-lg shadow p-6">
+          <div key={index} className="min-w-0 rounded-lg bg-white p-4 shadow sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 text-sm">{stat.label}</p>

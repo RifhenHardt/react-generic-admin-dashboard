@@ -10,9 +10,9 @@ const StatusBadge = ({ status }) => {
       label: 'Pending'
     },
     active: {
-      bg: 'bg-green-50',
-      text: 'text-green-700',
-      ring: 'ring-green-600/20',
+      bg: 'bg-primary-50',
+      text: 'text-primary-700',
+      ring: 'ring-primary-600/20',
       label: 'Active'
     },
     rejected: {
@@ -22,9 +22,9 @@ const StatusBadge = ({ status }) => {
       label: 'Rejected'
     },
     sold: {
-      bg: 'bg-blue-50',
-      text: 'text-blue-700',
-      ring: 'ring-blue-700/10',
+      bg: 'bg-primary-100',
+      text: 'text-primary-800',
+      ring: 'ring-primary-700/10',
       label: 'Sold'
     },
     hidden: {
