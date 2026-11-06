@@ -16,9 +16,18 @@ const Layout = ({ children }) => {
         </svg>
       )
     },
+    {
+      path: '/events',
+      label: 'Events',
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25m10.5-2.25v2.25M3.75 8.25h16.5M5.25 4.5h13.5A1.5 1.5 0 0120.25 6v13.5a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V6a1.5 1.5 0 011.5-1.5z" />
+        </svg>
+      ),
+    },
     { 
       path: '/listings', 
-      label: 'Listings',
+      label: 'Products',
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
@@ -54,7 +63,7 @@ const Layout = ({ children }) => {
     },
     { 
       path: '/orders', 
-      label: 'Orders',
+      label: 'Reservations',
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
@@ -78,7 +87,7 @@ const Layout = ({ children }) => {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-600">
             <span className="text-xl font-bold text-white">⚡</span>
           </div>
-          <span className="text-xl font-bold text-gray-900">ElectroLink</span>
+          <span className="text-xl font-bold text-gray-900">Campus Market</span>
         </div>
         
         <nav className="flex flex-1 flex-col gap-y-1 px-3 py-4">
@@ -110,8 +119,8 @@ const Layout = ({ children }) => {
               YY
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold leading-6 text-gray-900">Yousef Yahia</p>
-              <p className="text-xs leading-5 text-gray-500">Admin</p>
+              <p className="text-sm font-semibold leading-6 text-gray-900">Campus Admin</p>
+              <p className="text-xs leading-5 text-gray-500">Marketplace moderator</p>
             </div>
           </div>
         </div>
@@ -131,7 +140,7 @@ const Layout = ({ children }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <span className="truncate text-base font-bold text-gray-900">ElectroLink</span>
+          <span className="truncate text-base font-bold text-gray-900">Campus Market</span>
         </div>
         {children}
       </main>

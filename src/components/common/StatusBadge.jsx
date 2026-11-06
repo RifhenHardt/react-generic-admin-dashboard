@@ -1,50 +1,31 @@
-// src/components/common/StatusBadge.jsx
 import React from 'react';
 
-const StatusBadge = ({ status }) => {
-  const statusConfig = {
-    pending: {
-      bg: 'bg-yellow-50',
-      text: 'text-yellow-800',
-      ring: 'ring-yellow-600/20',
-      label: 'Pending'
-    },
-    active: {
-      bg: 'bg-primary-50',
-      text: 'text-primary-700',
-      ring: 'ring-primary-600/20',
-      label: 'Active'
-    },
-    rejected: {
-      bg: 'bg-red-50',
-      text: 'text-red-700',
-      ring: 'ring-red-600/10',
-      label: 'Rejected'
-    },
-    sold: {
-      bg: 'bg-primary-100',
-      text: 'text-primary-800',
-      ring: 'ring-primary-700/10',
-      label: 'Sold'
-    },
-    hidden: {
-      bg: 'bg-gray-50',
-      text: 'text-gray-600',
-      ring: 'ring-gray-500/10',
-      label: 'Hidden'
-    },
-  };
+const palette = {
+  pending: ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Pending review'],
+  requested: ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Requested'],
+  'pending verification': ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Pending verification'],
+  active: ['bg-primary-50', 'text-primary-700', 'ring-primary-600/20', 'Active'],
+  upcoming: ['bg-primary-100', 'text-primary-800', 'ring-primary-700/10', 'Upcoming'],
+  accepted: ['bg-primary-100', 'text-primary-800', 'ring-primary-700/10', 'Accepted'],
+  'ready for pickup': ['bg-primary-200', 'text-primary-900', 'ring-primary-700/10', 'Ready for pickup'],
+  completed: ['bg-primary-100', 'text-primary-800', 'ring-primary-700/10', 'Completed'],
+  sold: ['bg-primary-100', 'text-primary-800', 'ring-primary-700/10', 'Sold'],
+  'sold out': ['bg-primary-100', 'text-primary-800', 'ring-primary-700/10', 'Sold out'],
+  rejected: ['bg-red-50', 'text-red-700', 'ring-red-600/10', 'Rejected'],
+  cancelled: ['bg-red-50', 'text-red-700', 'ring-red-600/10', 'Cancelled'],
+  hidden: ['bg-gray-50', 'text-gray-600', 'ring-gray-500/10', 'Hidden'],
+  inactive: ['bg-gray-50', 'text-gray-600', 'ring-gray-500/10', 'Inactive'],
+};
 
-  const config = statusConfig[status.toLowerCase()] || {
-    bg: 'bg-gray-50',
-    text: 'text-gray-600',
-    ring: 'ring-gray-500/10',
-    label: status
-  };
+const StatusBadge = ({ status }) => {
+  const normalizedStatus = String(status || 'unknown').toLowerCase();
+  const [bg, text, ring, label] = palette[normalizedStatus] || [
+    'bg-gray-50', 'text-gray-600', 'ring-gray-500/10', String(status || 'Unknown'),
+  ];
 
   return (
-    <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${config.bg} ${config.text} ${config.ring}`}>
-      {config.label}
+    <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${bg} ${text} ${ring}`}>
+      {label}
     </span>
   );
 };

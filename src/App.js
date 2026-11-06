@@ -9,6 +9,7 @@ import ReportsPage from './pages/ReportsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import UsersPage from './pages/UsersPage';
 import OrdersPage from './pages/OrdersPage';
+import EventsPage from './pages/EventsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/events" element={<EventsPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>

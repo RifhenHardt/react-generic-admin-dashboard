@@ -1,5 +1,5 @@
 // src/components/common/GenericModal.jsx
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const GenericModal = ({ title, fields, initialData, onSubmit, onClose }) => {
   const [formData, setFormData] = useState(initialData || {});
@@ -52,13 +52,16 @@ const GenericModal = ({ title, fields, initialData, onSubmit, onClose }) => {
                       </label>
                       
                       <div className="mt-2">
-                        {field.type === 'text' && (
+                        {['text', 'email', 'number', 'date'].includes(field.type) && (
                           <input
-                            type="text"
+                            type={field.type}
                             id={field.name}
-                            value={formData[field.name] || ''}
+                            value={formData[field.name] ?? ''}
                             onChange={(e) => handleChange(field.name, e.target.value)}
                             required={field.required}
+                            min={field.min}
+                            step={field.step}
+                            placeholder={field.placeholder}
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
                           />
                         )}
@@ -67,8 +70,10 @@ const GenericModal = ({ title, fields, initialData, onSubmit, onClose }) => {
                           <textarea
                             id={field.name}
                             rows={3}
-                            value={formData[field.name] || ''}
+                            value={formData[field.name] ?? ''}
                             onChange={(e) => handleChange(field.name, e.target.value)}
+                            required={field.required}
+                            placeholder={field.placeholder}
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
                           />
                         )}

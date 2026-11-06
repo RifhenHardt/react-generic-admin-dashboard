@@ -3,7 +3,8 @@ import React from 'react';
 
 export const categoriesConfig = {
   entityName: 'categories',
-  title: 'Categories Management',
+  itemLabel: 'product category',
+  title: 'Product Categories',
   searchPlaceholder: 'Search categories by name...',
 
   columns: [
@@ -22,11 +23,11 @@ export const categoriesConfig = {
       ),
     },
     {
-      key: 'attributesCount',
-      label: 'Attributes',
+      key: 'productTypes',
+      label: 'Product types',
       render: (row) => (
         <span className="px-2 py-1 bg-primary-50 text-primary-700 rounded text-sm">
-          {row.attributesCount} Attributes
+          {row.productTypes} product types
         </span>
       ),
     },
@@ -34,15 +35,9 @@ export const categoriesConfig = {
       key: 'isActive',
       label: 'Status',
       render: (row) => (
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={row.isActive}
-            onChange={() => {}}
-            className="sr-only peer"
-          />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-        </label>
+        <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${row.isActive ? 'bg-primary-50 text-primary-700' : 'bg-gray-100 text-gray-600'}`}>
+          {row.isActive ? 'Active' : 'Hidden'}
+        </span>
       ),
     },
   ],
@@ -79,7 +74,7 @@ export const categoriesConfig = {
   formFields: [
     {
       name: 'name',
-      label: 'Category Name',
+      label: 'Category name',
       type: 'text',
       required: true,
     },
@@ -90,9 +85,11 @@ export const categoriesConfig = {
       required: true,
     },
     {
-      name: 'attributesCount',
-      label: 'Number of Attributes',
-      type: 'text',
+      name: 'productTypes',
+      label: 'Product types in this category',
+      type: 'number',
+      min: 0,
+      step: 1,
       required: true,
     },
     {

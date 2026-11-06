@@ -61,7 +61,8 @@ const GenericManagementPage = ({ config }) => {
   };
 
   const handleDelete = (item) => {
-    if (window.confirm(`Are you sure you want to delete "${item.name || item.title}"?`)) {
+    const itemName = item.name || item.title || item.product || item.orderId || item.reportId || item.email || 'this record';
+    if (window.confirm(`Are you sure you want to delete "${itemName}"?`)) {
       deleteMutation.mutate(item.id);
     }
   };
@@ -122,7 +123,7 @@ const GenericManagementPage = ({ config }) => {
 
       {isModalOpen && config.formFields && (
         <GenericModal
-          title={selectedItem ? `Edit ${config.entityName}` : `Create ${config.entityName}`}
+          title={`${selectedItem ? 'Edit' : 'Add'} ${config.itemLabel || config.entityName}`}
           fields={config.formFields}
           initialData={selectedItem}
           onSubmit={handleSubmit}
