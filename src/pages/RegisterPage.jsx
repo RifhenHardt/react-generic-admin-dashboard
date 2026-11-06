@@ -68,8 +68,9 @@ const RegisterPage = () => {
           </div>
           {isTeamRole && (
             <div className="sm:col-span-2">
-              <label htmlFor="register-team" className="mb-1 block text-sm font-medium text-gray-800">Vendor, class, or project team</label>
-              <input id="register-team" required minLength={2} maxLength={100} value={form.teamName} onChange={update('teamName')} className="input-field" />
+              <label htmlFor="register-team" className="mb-1 block text-sm font-medium text-gray-800">Name of your seller group or project</label>
+              <input id="register-team" placeholder="e.g., BSEd Food Craft Team" required minLength={2} maxLength={100} value={form.teamName} onChange={update('teamName')} className="input-field" />
+              <p className="mt-1 text-xs text-gray-500">Enter the name of your class, organization, or team that will sell at campus events.</p>
             </div>
           )}
           {form.role === 'admin' && (
