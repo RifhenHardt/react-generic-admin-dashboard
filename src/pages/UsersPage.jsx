@@ -32,8 +32,8 @@ const UsersPage = () => {
   return (
     <div className="min-w-0 p-4 sm:p-6 lg:p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Student & Vendor Accounts</h1>
-        <p className="mt-2 text-sm text-gray-600">Verify vendor and organizer accounts, or suspend accounts that violate marketplace rules.</p>
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Student & Seller Accounts</h1>
+        <p className="mt-2 text-sm text-gray-600">Verify seller accounts, or suspend accounts that violate marketplace rules.</p>
       </div>
 
       {error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error.message}</p>}
@@ -64,7 +64,7 @@ const UsersPage = () => {
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-600 sm:px-6">{String(user.created_at || '').slice(0, 10)}</td>
                     <td className="whitespace-nowrap px-4 py-4 sm:px-6"><StatusBadge status={user.status} /></td>
                     <td className="whitespace-nowrap px-4 py-4 sm:px-6">
-                      {user.role === 'moderator' ? (
+                      {user.role === 'admin' ? (
                         <span className="text-xs text-gray-500">Staff account</span>
                       ) : (
                         <button

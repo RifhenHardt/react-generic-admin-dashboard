@@ -9,7 +9,7 @@ import {
   storeSession,
 } from '../../_lib/auth.js';
 
-const allowedRoles = new Set(['student', 'vendor', 'organizer', 'moderator']);
+const allowedRoles = new Set(['student', 'seller', 'admin']);
 
 function constantTimeEqual(left, right) {
   if (typeof left !== 'string' || typeof right !== 'string') return false;
@@ -34,8 +34,8 @@ export async function onRequestPost({ request, env }) {
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'Enter a valid email address.' }, 400);
   if (password.length < 10 || password.length > 128) return json({ error: 'Password must be 10 to 128 characters.' }, 400);
   if (!allowedRoles.has(role)) return json({ error: 'Choose a supported account type.' }, 400);
-  if ((role === 'vendor' || role === 'organizer') && (teamName.length < 2 || teamName.length > 100)) {
-    return json({ error: 'Enter your vendor, class, or project team name.' }, 400);
+  if (role === 'seller' && (teamName.length < 2 || teamName.length > 100)) {
+    return json({ error: 'Enter your seller, class, or project team name.' }, 400);
   }
 
   const domains = String(env.CAMPUS_EMAIL_DOMAINS || '').split(',').map((domain) => domain.trim().toLowerCase().replace(/^@/, '')).filter(Boolean);
@@ -43,20 +43,22 @@ export async function onRequestPost({ request, env }) {
     return json({ error: `Use an email address from: ${domains.map((domain) => `@${domain}`).join(', ')}.` }, 400);
   }
 
-  if (role === 'moderator' && (!env.STAFF_INVITE_CODE || !constantTimeEqual(String(body.inviteCode || ''), String(env.STAFF_INVITE_CODE)))) {
-    return json({ error: 'A valid staff invite code is required for moderator accounts.' }, 403);
+  if (role === 'admin' && (!env.STAFF_INVITE_CODE || !constantTimeEqual(String(body.inviteCode || ''), String(env.STAFF_INVITE_CODE)))) {
+    return json({ error: 'A valid staff invite code is required for admin accounts.' }, 403);
   }
 
   const salt = createSalt();
   const passwordHash = await createPasswordHash(password, salt);
   const id = crypto.randomUUID();
-  const status = role === 'vendor' || role === 'organizer' ? 'pending verification' : 'active';
+  // Keep the database's existing constrained role values while exposing only the current account types.
+  const databaseRole = role === 'seller' ? 'vendor' : role === 'admin' ? 'moderator' : 'student';
+  const status = role === 'seller' ? 'pending verification' : 'active';
 
   try {
     await env.DB.prepare(`
       INSERT INTO users (id, name, email, password_hash, password_salt, role, team_name, status)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).bind(id, name, email, passwordHash, salt, role, teamName, status).run();
+    `).bind(id, name, email, passwordHash, salt, databaseRole, teamName, status).run();
   } catch (error) {
     if (String(error?.message || '').toLowerCase().includes('unique')) {
       return json({ error: 'An account with that email already exists. Try signing in.' }, 409);

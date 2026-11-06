@@ -10,13 +10,9 @@ const roleCopy = {
     title: 'Student marketplace',
     description: 'Browse food, clothing, accessories, souvenirs, and project products offered at campus events.',
   },
-  vendor: {
+  seller: {
     title: 'Vendor workspace',
     description: 'Keep track of products your team has submitted for campus events.',
-  },
-  organizer: {
-    title: 'Event organizer workspace',
-    description: 'See campus events and the student products associated with them.',
   },
 };
 
@@ -26,7 +22,7 @@ const RoleHomePage = ({ user }) => {
   const products = listingsData?.items || [];
   const events = eventsData?.items || [];
   const copy = roleCopy[user.role] || roleCopy.student;
-  const visibleProducts = user.role === 'vendor'
+  const visibleProducts = user.role === 'seller'
     ? products.filter((product) => product.sellerTeam?.toLowerCase() === user.teamName?.toLowerCase())
     : products.filter((product) => product.status === 'active');
 
@@ -47,14 +43,14 @@ const RoleHomePage = ({ user }) => {
         </div>
         {user.status === 'pending verification' && (
           <p className="mt-4 rounded-lg bg-yellow-50 p-3 text-sm text-yellow-900">
-            A moderator needs to verify your vendor or organizer account before your team is fully activated.
+            An admin needs to verify your seller account before your team is fully activated.
           </p>
         )}
       </section>
 
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-lg font-semibold text-gray-900">{user.role === 'vendor' ? 'Your team products' : 'Products on sale'}</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{user.role === 'seller' ? 'Your team products' : 'Products on sale'}</h2>
           <div className="mt-4 space-y-3">
             {visibleProducts.slice(0, 6).map((product) => (
               <div key={product.id} className="flex items-start justify-between gap-3 rounded-lg bg-gray-50 p-3">
@@ -67,7 +63,7 @@ const RoleHomePage = ({ user }) => {
             ))}
             {visibleProducts.length === 0 && (
               <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
-                {user.role === 'vendor' ? 'No demo products match your team name yet.' : 'No products are on sale right now.'}
+                {user.role === 'seller' ? 'No demo products match your team name yet.' : 'No products are on sale right now.'}
               </p>
             )}
           </div>

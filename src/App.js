@@ -43,12 +43,12 @@ const AccountRoutes = () => (
     <Route path="/login" element={<LoginPage />} />
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/" element={<ProtectedHome />} />
-    <Route path="/events" element={<ProtectedPage roles={['moderator']}><EventsPage /></ProtectedPage>} />
-    <Route path="/listings" element={<ProtectedPage roles={['moderator']}><ListingsPage /></ProtectedPage>} />
-    <Route path="/reports" element={<ProtectedPage roles={['moderator']}><ReportsPage /></ProtectedPage>} />
-    <Route path="/categories" element={<ProtectedPage roles={['moderator']}><CategoriesPage /></ProtectedPage>} />
-    <Route path="/users" element={<ProtectedPage roles={['moderator']}><UsersPage /></ProtectedPage>} />
-    <Route path="/orders" element={<ProtectedPage roles={['moderator']}><OrdersPage /></ProtectedPage>} />
+    <Route path="/events" element={<ProtectedPage roles={['admin']}><EventsPage /></ProtectedPage>} />
+    <Route path="/listings" element={<ProtectedPage roles={['admin']}><ListingsPage /></ProtectedPage>} />
+    <Route path="/reports" element={<ProtectedPage roles={['admin']}><ReportsPage /></ProtectedPage>} />
+    <Route path="/categories" element={<ProtectedPage roles={['admin']}><CategoriesPage /></ProtectedPage>} />
+    <Route path="/users" element={<ProtectedPage roles={['admin']}><UsersPage /></ProtectedPage>} />
+    <Route path="/orders" element={<ProtectedPage roles={['admin']}><OrdersPage /></ProtectedPage>} />
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );
@@ -57,7 +57,7 @@ const ProtectedHome = () => {
   const { user, loading } = useAuth();
   if (loading) return <LoadingPage />;
   if (!user) return <Navigate to="/login" replace />;
-  return <Layout>{user.role === 'moderator' ? <Dashboard /> : <RoleHomePage user={user} />}</Layout>;
+  return <Layout>{user.role === 'admin' ? <Dashboard /> : <RoleHomePage user={user} />}</Layout>;
 };
 
 function App() {

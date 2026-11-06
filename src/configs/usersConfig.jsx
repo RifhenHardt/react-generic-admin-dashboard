@@ -26,11 +26,9 @@ export const usersConfig = {
       key: 'role',
       label: 'Account type',
       render: (row) => {
-        const roleColor = row.role === 'moderator'
+        const roleColor = row.role === 'admin'
           ? 'bg-primary-100 text-primary-800'
-          : row.role === 'organizer'
-            ? 'bg-primary-50 text-primary-700'
-            : row.role === 'vendor'
+          : row.role === 'seller'
               ? 'bg-primary-200 text-primary-900'
               : 'bg-gray-100 text-gray-700';
         return <span className={`rounded px-2 py-1 text-xs font-medium ${roleColor}`}>{row.role}</span>;
@@ -56,9 +54,8 @@ export const usersConfig = {
       required: true,
       options: [
         { value: 'student', label: 'Student buyer' },
-        { value: 'vendor', label: 'Student vendor' },
-        { value: 'organizer', label: 'Event organizer' },
-        { value: 'moderator', label: 'Marketplace moderator' },
+        { value: 'seller', label: 'Seller' },
+        { value: 'admin', label: 'Marketplace admin' },
       ],
     },
     { name: 'teamName', label: 'Vendor / project team', type: 'text' },

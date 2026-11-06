@@ -73,7 +73,7 @@ const Layout = ({ children }) => {
       )
     },
   ];
-  const navForRole = user?.role === 'moderator'
+  const navForRole = user?.role === 'admin'
     ? navItems
     : [{ ...navItems[0], label: user?.role === 'student' ? 'Marketplace' : 'My workspace' }];
   const initials = String(user?.name || 'Campus Member').split(' ').map((part) => part[0]).slice(0, 2).join('');

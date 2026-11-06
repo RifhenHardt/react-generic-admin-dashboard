@@ -10,7 +10,7 @@ const RegisterPage = () => {
   const [submitting, setSubmitting] = useState(false);
 
   if (!loading && user) return <Navigate to="/" replace />;
-  const isTeamRole = form.role === 'vendor' || form.role === 'organizer';
+  const isTeamRole = form.role === 'seller';
 
   const update = (field) => (event) => setForm((current) => ({ ...current, [field]: event.target.value }));
   const handleSubmit = async (event) => {
@@ -44,7 +44,7 @@ const RegisterPage = () => {
         <div className="mb-6">
           <p className="text-sm font-semibold uppercase tracking-wide text-primary-700">Campus Market</p>
           <h1 className="mt-2 text-2xl font-bold text-gray-900">Create your account</h1>
-          <p className="mt-2 text-sm text-gray-600">Students, vendors, and event organizers each get their own workspace.</p>
+          <p className="mt-2 text-sm text-gray-600">Choose a student, seller, or admin account.</p>
         </div>
 
         {error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
@@ -62,9 +62,8 @@ const RegisterPage = () => {
             <label htmlFor="register-role" className="mb-1 block text-sm font-medium text-gray-800">Account type</label>
             <select id="register-role" value={form.role} onChange={update('role')} className="input-field">
               <option value="student">Student buyer</option>
-              <option value="vendor">Student vendor / project team</option>
-              <option value="organizer">Event organizer</option>
-              <option value="moderator">Marketplace moderator</option>
+              <option value="seller">Seller / project team</option>
+              <option value="admin">Marketplace admin</option>
             </select>
           </div>
           {isTeamRole && (
@@ -73,11 +72,11 @@ const RegisterPage = () => {
               <input id="register-team" required minLength={2} maxLength={100} value={form.teamName} onChange={update('teamName')} className="input-field" />
             </div>
           )}
-          {form.role === 'moderator' && (
+          {form.role === 'admin' && (
             <div className="sm:col-span-2">
               <label htmlFor="register-invite" className="mb-1 block text-sm font-medium text-gray-800">Staff invite code</label>
               <input id="register-invite" type="password" autoComplete="off" required value={form.inviteCode} onChange={update('inviteCode')} className="input-field" />
-              <p className="mt-1 text-xs text-gray-500">Moderators must be invited by the marketplace administrator.</p>
+              <p className="mt-1 text-xs text-gray-500">Admin accounts require the private staff invite code.</p>
             </div>
           )}
           <div>

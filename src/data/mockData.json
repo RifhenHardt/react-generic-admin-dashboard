@@ -27,12 +27,12 @@
     { "id": 6, "name": "Project Products", "icon": "💡", "productTypes": 3, "isActive": true }
   ],
   "users": [
-    { "id": 1, "name": "Mika Santos", "email": "mika.santos@campus.edu", "role": "organizer", "teamName": "Student Council Merchandise", "joinedDate": "2026-08-20", "lastActive": "2026-11-05", "status": "active" },
-    { "id": 2, "name": "Paolo Reyes", "email": "paolo.reyes@campus.edu", "role": "vendor", "teamName": "BSEd Food Craft Team", "joinedDate": "2026-09-02", "lastActive": "2026-11-05", "status": "active" },
-    { "id": 3, "name": "Alyssa Cruz", "email": "alyssa.cruz@campus.edu", "role": "vendor", "teamName": "Crafts for a Cause", "joinedDate": "2026-09-08", "lastActive": "2026-11-04", "status": "active" },
+    { "id": 1, "name": "Mika Santos", "email": "mika.santos@campus.edu", "role": "seller", "teamName": "Student Council Merchandise", "joinedDate": "2026-08-20", "lastActive": "2026-11-05", "status": "active" },
+    { "id": 2, "name": "Paolo Reyes", "email": "paolo.reyes@campus.edu", "role": "seller", "teamName": "BSEd Food Craft Team", "joinedDate": "2026-09-02", "lastActive": "2026-11-05", "status": "active" },
+    { "id": 3, "name": "Alyssa Cruz", "email": "alyssa.cruz@campus.edu", "role": "seller", "teamName": "Crafts for a Cause", "joinedDate": "2026-09-08", "lastActive": "2026-11-04", "status": "active" },
     { "id": 4, "name": "Noah Garcia", "email": "noah.garcia@campus.edu", "role": "student", "teamName": "", "joinedDate": "2026-09-12", "lastActive": "2026-11-04", "status": "active" },
-    { "id": 5, "name": "Sam Flores", "email": "sam.flores@campus.edu", "role": "vendor", "teamName": "Bake Sale for Scholars", "joinedDate": "2026-09-17", "lastActive": "2026-11-03", "status": "pending verification" },
-    { "id": 6, "name": "Jamie Lim", "email": "jamie.lim@campus.edu", "role": "moderator", "teamName": "Campus Market Admin", "joinedDate": "2026-08-15", "lastActive": "2026-11-05", "status": "active" }
+    { "id": 5, "name": "Sam Flores", "email": "sam.flores@campus.edu", "role": "seller", "teamName": "Bake Sale for Scholars", "joinedDate": "2026-09-17", "lastActive": "2026-11-03", "status": "pending verification" },
+    { "id": 6, "name": "Jamie Lim", "email": "jamie.lim@campus.edu", "role": "admin", "teamName": "Campus Market Admin", "joinedDate": "2026-08-15", "lastActive": "2026-11-05", "status": "active" }
   ],
   "orders": [
     { "id": 1, "orderId": "EVT-3001", "customer": "Noah Garcia", "product": "Ube Cheese Pandesal", "sellerTeam": "BSEd Food Craft Team", "event": "Campus Makers Fair", "quantity": 2, "price": 70, "orderDate": "2026-11-05", "status": "requested" },

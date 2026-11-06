@@ -76,11 +76,12 @@ function readCookie(request, name) {
 
 export function publicUser(row) {
   if (!row) return null;
+  const role = row.role === 'moderator' ? 'admin' : ['vendor', 'organizer'].includes(row.role) ? 'seller' : row.role;
   return {
     id: row.id,
     name: row.name,
     email: row.email,
-    role: row.role,
+    role,
     teamName: row.team_name,
     status: row.status,
     createdAt: row.created_at,

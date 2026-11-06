@@ -26,7 +26,7 @@ const Dashboard = () => {
   const stats = [
     { label: 'Products on sale', value: listings.filter((listing) => listing.status === 'active').length, icon: '🛍️', color: 'bg-primary-700' },
     { label: 'Awaiting review', value: pendingCount, icon: '🕒', color: 'bg-primary-500' },
-    { label: 'Campus vendors', value: users.filter((user) => user.role === 'vendor').length, icon: '🏷️', color: 'bg-primary-300' },
+    { label: 'Campus sellers', value: users.filter((user) => user.role === 'seller').length, icon: '🏷️', color: 'bg-primary-300' },
     { label: 'Reports to review', value: reports.length, icon: '⚑', color: 'bg-primary-600' },
   ];
 
