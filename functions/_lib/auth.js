@@ -1,5 +1,7 @@
 const SESSION_COOKIE = 'campus_session';
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7;
+// Cloudflare Workers Web Crypto supports PBKDF2 iteration counts up to 100,000.
+const PASSWORD_HASH_ITERATIONS = 100000;
 const encoder = new TextEncoder();
 
 export function json(data, status = 200, extraHeaders = {}) {
@@ -45,7 +47,7 @@ export async function createPasswordHash(password, saltHex) {
   const bits = await crypto.subtle.deriveBits({
     name: 'PBKDF2',
     salt: fromHex(saltHex),
-    iterations: 210000,
+    iterations: PASSWORD_HASH_ITERATIONS,
     hash: 'SHA-256',
   }, key, 256);
   return toHex(new Uint8Array(bits));
