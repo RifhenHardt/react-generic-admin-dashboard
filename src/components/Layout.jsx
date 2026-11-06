@@ -75,7 +75,18 @@ const Layout = ({ children }) => {
   ];
   const navForRole = user?.role === 'admin'
     ? navItems
-    : [{ ...navItems[0], label: user?.role === 'student' ? 'Marketplace' : 'My workspace' }];
+    : user?.role === 'student'
+      ? [
+          { ...navItems[0], label: 'Marketplace' },
+          { ...navItems[6], path: '/#my-reservations', label: 'My reservations' },
+          { ...navItems[1], path: '/#upcoming-events', label: 'Campus events' },
+        ]
+      : [
+          { ...navItems[0], label: 'Seller workspace' },
+          { ...navItems[2], path: '/#seller-submit', label: 'Submit products' },
+          { ...navItems[2], path: '/#seller-products', label: 'My products' },
+          { ...navItems[6], path: '/#seller-orders', label: 'Student reservations' },
+        ];
   const initials = String(user?.name || 'Campus Member').split(' ').map((part) => part[0]).slice(0, 2).join('');
 
   return (
@@ -98,7 +109,8 @@ const Layout = ({ children }) => {
         
         <nav className="flex flex-1 flex-col gap-y-1 px-3 py-4">
           {navForRole.map((item) => {
-            const isActive = location.pathname === item.path;
+            const [itemPath, itemHash] = item.path.split('#');
+            const isActive = location.pathname === itemPath && (itemHash ? location.hash === `#${itemHash}` : !location.hash);
             return (
               <Link
                 key={item.path}
