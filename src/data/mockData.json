@@ -40,5 +40,7 @@
     { "id": 3, "orderId": "EVT-3003", "customer": "Mika Santos", "product": "Beaded Phone Charms", "sellerTeam": "Crafts for a Cause", "event": "Campus Makers Fair", "quantity": 1, "price": 90, "orderDate": "2026-11-04", "status": "ready for pickup" },
     { "id": 4, "orderId": "EVT-3004", "customer": "Paolo Reyes", "product": "Brownie Box", "sellerTeam": "Bake Sale for Scholars", "event": "Foundation Week Bazaar", "quantity": 2, "price": 240, "orderDate": "2026-11-04", "status": "completed" },
     { "id": 5, "orderId": "EVT-3005", "customer": "Jamie Lim", "product": "Hand-painted Tote Bag", "sellerTeam": "Fine Arts Studio", "event": "Campus Makers Fair", "quantity": 1, "price": 220, "orderDate": "2026-11-03", "status": "cancelled" }
-  ]
+  ],
+  "messages": [],
+  "reviews": []
 }

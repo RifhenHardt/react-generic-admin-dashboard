@@ -80,12 +80,16 @@ const Layout = ({ children }) => {
           { ...navItems[0], label: 'Marketplace' },
           { ...navItems[6], path: '/#my-reservations', label: 'My reservations' },
           { ...navItems[1], path: '/#upcoming-events', label: 'Campus events' },
+          { ...navItems[6], path: '/#my-messages', label: 'My messages' },
         ]
       : [
           { ...navItems[0], label: 'Seller workspace' },
+          { ...navItems[0], path: '/#seller-performance', label: 'Sales summary' },
           { ...navItems[2], path: '/#seller-submit', label: 'Submit products' },
           { ...navItems[2], path: '/#seller-products', label: 'My products' },
           { ...navItems[6], path: '/#seller-orders', label: 'Student reservations' },
+          { ...navItems[6], path: '/#seller-messages', label: 'Buyer messages' },
+          { ...navItems[3], path: '/#seller-feedback', label: 'Buyer feedback' },
         ];
   const initials = String(user?.name || 'Campus Member').split(' ').map((part) => part[0]).slice(0, 2).join('');
 

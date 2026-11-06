@@ -3,6 +3,8 @@ import React from 'react';
 const palette = {
   pending: ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Pending review'],
   requested: ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Requested'],
+  unread: ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Awaiting reply'],
+  replied: ['bg-primary-50', 'text-primary-700', 'ring-primary-600/20', 'Replied'],
   'pending verification': ['bg-yellow-50', 'text-yellow-800', 'ring-yellow-600/20', 'Pending verification'],
   active: ['bg-primary-50', 'text-primary-700', 'ring-primary-600/20', 'Active'],
   upcoming: ['bg-primary-100', 'text-primary-800', 'ring-primary-700/10', 'Upcoming'],
