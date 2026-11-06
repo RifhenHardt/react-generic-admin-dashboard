@@ -51,12 +51,13 @@ const RegisterPage = () => {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <label htmlFor="register-name" className="mb-1 block text-sm font-medium text-gray-800">Full name</label>
-            <input id="register-name" autoComplete="name" required minLength={2} maxLength={80} value={form.name} onChange={update('name')} className="input-field" />
+            <input id="register-name" autoComplete="name" placeholder="e.g., Alex Santos" required minLength={2} maxLength={80} value={form.name} onChange={update('name')} className="input-field" />
+            <p className="mt-1 text-xs text-gray-500">Enter the name you want other campus members to recognize.</p>
           </div>
           <div className="sm:col-span-2">
             <label htmlFor="register-email" className="mb-1 block text-sm font-medium text-gray-800">Email</label>
-            <input id="register-email" type="email" autoComplete="email" required value={form.email} onChange={update('email')} className="input-field" />
-            <p className="mt-1 text-xs text-gray-500">Use your campus email if your school requires one.</p>
+            <input id="register-email" type="email" autoComplete="email" placeholder="you@example.com" required value={form.email} onChange={update('email')} className="input-field" />
+            <p className="mt-1 text-xs text-gray-500">Use an email address you can access. Choose your campus email if your school requires one.</p>
           </div>
           <div className="sm:col-span-2">
             <label htmlFor="register-role" className="mb-1 block text-sm font-medium text-gray-800">Account type</label>
@@ -65,29 +66,37 @@ const RegisterPage = () => {
               <option value="seller">Seller / project team</option>
               <option value="admin">Marketplace admin</option>
             </select>
+            <p className="mt-1 text-xs text-gray-500">
+              {form.role === 'seller'
+                ? 'Seller accounts need admin verification before selling.'
+                : form.role === 'admin'
+                  ? 'For marketplace staff. A valid staff invite code is required.'
+                  : 'For students who want to browse and reserve campus-market products.'}
+            </p>
           </div>
           {isTeamRole && (
             <div className="sm:col-span-2">
               <label htmlFor="register-team" className="mb-1 block text-sm font-medium text-gray-800">Name of your seller group or project</label>
-              <input id="register-team" placeholder="e.g., BSEd Food Craft Team" required minLength={2} maxLength={100} value={form.teamName} onChange={update('teamName')} className="input-field" />
+              <input id="register-team" autoComplete="organization" placeholder="e.g., BSEd Food Craft Team" required minLength={2} maxLength={100} value={form.teamName} onChange={update('teamName')} className="input-field" />
               <p className="mt-1 text-xs text-gray-500">Enter the name of your class, organization, or team that will sell at campus events.</p>
             </div>
           )}
           {form.role === 'admin' && (
             <div className="sm:col-span-2">
               <label htmlFor="register-invite" className="mb-1 block text-sm font-medium text-gray-800">Staff invite code</label>
-              <input id="register-invite" type="password" autoComplete="off" required value={form.inviteCode} onChange={update('inviteCode')} className="input-field" />
-              <p className="mt-1 text-xs text-gray-500">Admin accounts require the private staff invite code.</p>
+              <input id="register-invite" type="password" autoComplete="off" placeholder="Enter the code provided by marketplace staff" required value={form.inviteCode} onChange={update('inviteCode')} className="input-field" />
+              <p className="mt-1 text-xs text-gray-500">Admin accounts require the private staff invite code. Contact the marketplace owner if you need one.</p>
             </div>
           )}
           <div>
             <label htmlFor="register-password" className="mb-1 block text-sm font-medium text-gray-800">Password</label>
-            <input id="register-password" type="password" autoComplete="new-password" required minLength={10} maxLength={128} value={form.password} onChange={update('password')} className="input-field" />
-            <p className="mt-1 text-xs text-gray-500">At least 10 characters.</p>
+            <input id="register-password" type="password" autoComplete="new-password" placeholder="Create a password" required minLength={10} maxLength={128} value={form.password} onChange={update('password')} className="input-field" />
+            <p className="mt-1 text-xs text-gray-500">Use at least 10 characters. A mix of words, numbers, and symbols is recommended.</p>
           </div>
           <div>
             <label htmlFor="register-confirm" className="mb-1 block text-sm font-medium text-gray-800">Confirm password</label>
-            <input id="register-confirm" type="password" autoComplete="new-password" required minLength={10} maxLength={128} value={form.confirmPassword} onChange={update('confirmPassword')} className="input-field" />
+            <input id="register-confirm" type="password" autoComplete="new-password" placeholder="Re-enter your password" required minLength={10} maxLength={128} value={form.confirmPassword} onChange={update('confirmPassword')} className="input-field" />
+            <p className="mt-1 text-xs text-gray-500">Enter the same password again to confirm it.</p>
           </div>
           <div className="sm:col-span-2">
             <button type="submit" disabled={submitting} className="btn-primary w-full disabled:cursor-wait disabled:opacity-60">
