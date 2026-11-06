@@ -1,10 +1,12 @@
 // src/components/Layout.jsx
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout = ({ children }) => {
   const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const navItems = [
     { 
@@ -71,6 +73,10 @@ const Layout = ({ children }) => {
       )
     },
   ];
+  const navForRole = user?.role === 'moderator'
+    ? navItems
+    : [{ ...navItems[0], label: user?.role === 'student' ? 'Marketplace' : 'My workspace' }];
+  const initials = String(user?.name || 'Campus Member').split(' ').map((part) => part[0]).slice(0, 2).join('');
 
   return (
     <div className="flex min-h-screen bg-gray-100 md:h-screen">
@@ -91,7 +97,7 @@ const Layout = ({ children }) => {
         </div>
         
         <nav className="flex flex-1 flex-col gap-y-1 px-3 py-4">
-          {navItems.map((item) => {
+          {navForRole.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
@@ -116,12 +122,15 @@ const Layout = ({ children }) => {
         <div className="border-t border-gray-200 p-4">
           <div className="flex items-center gap-x-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-600 text-sm font-semibold text-white">
-              YY
+              {initials}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold leading-6 text-gray-900">Campus Admin</p>
-              <p className="text-xs leading-5 text-gray-500">Marketplace moderator</p>
+              <p className="truncate text-sm font-semibold leading-6 text-gray-900">{user?.name}</p>
+              <p className="text-xs capitalize leading-5 text-gray-500">{user?.role}</p>
             </div>
+            <button type="button" onClick={signOut} className="rounded-md px-2 py-1 text-xs font-medium text-primary-700 hover:bg-primary-50">
+              Sign out
+            </button>
           </div>
         </div>
       </aside>

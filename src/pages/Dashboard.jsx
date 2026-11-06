@@ -4,15 +4,20 @@ import { useQuery } from '@tanstack/react-query';
 import { mockApi } from '../services/mockApi';
 
 const loadAll = (entityName) => mockApi.getAll(entityName, { page: 1, pageSize: 100 });
+const loadAccounts = async () => {
+  const response = await fetch('/api/moderator/users', { credentials: 'same-origin' });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Could not load accounts.');
+  return data.users;
+};
 
 const Dashboard = () => {
   const { data: listingsData } = useQuery({ queryKey: ['listings', 'dashboard'], queryFn: () => loadAll('listings') });
-  const { data: usersData } = useQuery({ queryKey: ['users', 'dashboard'], queryFn: () => loadAll('users') });
+  const { data: users = [] } = useQuery({ queryKey: ['account-users'], queryFn: loadAccounts });
   const { data: eventsData } = useQuery({ queryKey: ['events', 'dashboard'], queryFn: () => loadAll('events') });
   const { data: reportsData } = useQuery({ queryKey: ['reports', 'dashboard'], queryFn: () => loadAll('reports') });
 
   const listings = listingsData?.items || [];
-  const users = usersData?.items || [];
   const events = eventsData?.items || [];
   const reports = reportsData?.items || [];
   const nextEvent = events.find((event) => event.status === 'upcoming' || event.status === 'active');
@@ -92,7 +97,7 @@ const Dashboard = () => {
         </section>
       </div>
 
-      <p className="mt-6 text-xs text-gray-500">Demo dashboard: data is stored in this browser until a shared backend is connected.</p>
+      <p className="mt-6 text-xs text-gray-500">Account records are shared through Cloudflare D1. Product, event, and report records on this dashboard are still browser-local demo data.</p>
     </div>
   );
 };

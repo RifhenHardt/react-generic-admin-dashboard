@@ -1,0 +1,9 @@
+name = "electrolink-admin"
+compatibility_date = "2026-11-06"
+pages_build_output_dir = "./build"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "campus-market-auth"
+database_id = "430ffeba-7351-47d7-add1-20ff99b1a8a1"
+migrations_dir = "migrations"
