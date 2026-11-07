@@ -8,6 +8,24 @@ const categories = ['All categories', 'Food & Drinks', 'Clothing', 'Wearable Acc
 const loadAll = (entityName) => mockApi.getAll(entityName, { page: 1, pageSize: 200 });
 const money = (value) => `₱${Number(value || 0).toFixed(2)}`;
 
+async function marketplaceRequest(path, options = {}) {
+  let response;
+  try {
+    response = await fetch(path, {
+      credentials: 'same-origin',
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    });
+  } catch {
+    throw new Error('Could not reach the marketplace service. Check your connection and try again.');
+  }
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) throw new Error('The marketplace communication service is unavailable.');
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'The request could not be completed.');
+  return data;
+}
+
 const RoleHomePage = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,20 +47,20 @@ const RoleHomePage = ({ user }) => {
   const { data: listingsData, isLoading: listingsLoading } = useQuery({ queryKey: ['listings', 'account-home'], queryFn: () => loadAll('listings') });
   const { data: eventsData } = useQuery({ queryKey: ['events', 'account-home'], queryFn: () => loadAll('events') });
   const { data: ordersData } = useQuery({ queryKey: ['orders', 'account-home'], queryFn: () => loadAll('orders') });
-  const { data: messagesData } = useQuery({ queryKey: ['messages', 'account-home'], queryFn: () => loadAll('messages') });
-  const { data: reviewsData } = useQuery({ queryKey: ['reviews', 'account-home'], queryFn: () => loadAll('reviews') });
+  const { data: messagesData } = useQuery({ queryKey: ['messages', 'account-home', user.id], queryFn: () => marketplaceRequest('/api/market/messages') });
+  const { data: reviewsData } = useQuery({ queryKey: ['reviews', 'account-home', user.id], queryFn: () => marketplaceRequest('/api/market/reviews') });
   const products = useMemo(() => listingsData?.items || [], [listingsData]);
   const events = (eventsData?.items || []).filter((event) => event.status !== 'completed');
   const orders = ordersData?.items || [];
-  const messages = messagesData?.items || [];
-  const reviews = reviewsData?.items || [];
+  const messages = messagesData?.messages || [];
+  const reviews = reviewsData?.reviews || [];
   const teamProducts = products.filter((product) => product.sellerTeam?.trim().toLowerCase() === user.teamName?.trim().toLowerCase());
   const buyerOrders = orders.filter((order) => order.customerEmail ? order.customerEmail.toLowerCase() === user.email.toLowerCase() : order.customer === user.name);
   const sellerOrders = orders.filter((order) => order.sellerTeam?.trim().toLowerCase() === user.teamName?.trim().toLowerCase());
   const sellerMessages = messages.filter((message) => message.sellerTeam?.trim().toLowerCase() === user.teamName?.trim().toLowerCase());
   const buyerMessages = messages.filter((message) => message.senderEmail?.toLowerCase() === user.email.toLowerCase());
   const sellerReviews = reviews.filter((review) => review.sellerTeam?.trim().toLowerCase() === user.teamName?.trim().toLowerCase());
-  const reviewedOrderIds = new Set(reviews.filter((review) => review.studentEmail?.toLowerCase() === user.email.toLowerCase()).map((review) => review.orderId));
+  const reviewedOrderIds = new Set(reviews.map((review) => String(review.orderId)));
   const completedOrders = sellerOrders.filter((order) => order.status === 'completed');
   const completedSales = completedOrders.reduce((sum, order) => sum + Number(order.price || 0), 0);
   const lowStockProducts = teamProducts.filter((product) => Number(product.stock) <= Number(product.reorderAt ?? 5));
@@ -137,7 +155,7 @@ const RoleHomePage = ({ user }) => {
   const messageMutation = useMutation({
     mutationFn: ({ product, message }) => {
       if (!message.trim()) throw new Error('Write a message before sending.');
-      return mockApi.create('messages', { productId: product.id, productTitle: product.title, sellerTeam: product.sellerTeam, senderName: user.name, senderEmail: user.email, message: message.trim(), response: '', status: 'unread' });
+      return marketplaceRequest('/api/market/messages', { method: 'POST', body: JSON.stringify({ productId: product.id, productTitle: product.title, sellerTeam: product.sellerTeam, message: message.trim() }) });
     },
     onSuccess: (_, variables) => { setContactDrafts((current) => ({ ...current, [variables.product.id]: '' })); setNotice('Your message was sent to the seller.'); refreshData(); },
     onError: (error) => setNotice(error.message),
@@ -145,7 +163,7 @@ const RoleHomePage = ({ user }) => {
   const replyMutation = useMutation({
     mutationFn: ({ message, response }) => {
       if (!response.trim()) throw new Error('Write a reply before sending.');
-      return mockApi.update('messages', message.id, { response: response.trim(), status: 'replied', repliedAt: new Date().toISOString() });
+      return marketplaceRequest(`/api/market/messages/${encodeURIComponent(message.id)}`, { method: 'PATCH', body: JSON.stringify({ response: response.trim() }) });
     },
     onSuccess: (_, variables) => { setReplyDrafts((current) => ({ ...current, [variables.message.id]: '' })); setNotice('Reply sent to the student.'); refreshData(); },
     onError: (error) => setNotice(error.message),
@@ -153,8 +171,8 @@ const RoleHomePage = ({ user }) => {
   const reviewMutation = useMutation({
     mutationFn: ({ order, rating, comment }) => {
       if (!comment.trim()) throw new Error('Add a short comment about your experience.');
-      if (reviewedOrderIds.has(order.id)) throw new Error('You already reviewed this reservation.');
-      return mockApi.create('reviews', { orderId: order.id, productId: order.listingId, product: order.product, sellerTeam: order.sellerTeam, studentName: user.name, studentEmail: user.email, rating: Number(rating), comment: comment.trim() });
+      if (reviewedOrderIds.has(String(order.id))) throw new Error('You already reviewed this reservation.');
+      return marketplaceRequest('/api/market/reviews', { method: 'POST', body: JSON.stringify({ orderId: order.id, productId: order.listingId || order.product, productTitle: order.product, sellerTeam: order.sellerTeam, rating: Number(rating), comment: comment.trim() }) });
     },
     onSuccess: () => { setNotice('Thank you. Your feedback was saved.'); refreshData(); },
     onError: (error) => setNotice(error.message),
@@ -301,7 +319,7 @@ const RoleHomePage = ({ user }) => {
           </section>}
           {activeView === 'reservations' && <section id="my-reservations" className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <div><h2 className="text-lg font-semibold text-gray-900">My reservations</h2><p className="mt-1 text-sm text-gray-600">Follow each request through seller acceptance and campus pickup.</p></div>
-            <div className="mt-4 space-y-3">{buyerOrders.map((order) => <article key={order.id} className="rounded-lg border border-gray-200 p-4"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-semibold text-gray-900">{order.product} <span className="font-normal text-gray-500">× {order.quantity}</span></p><p className="mt-1 text-sm text-gray-600">{order.sellerTeam} · {order.event} · {money(order.price)}</p><div className="mt-2"><StatusBadge status={order.status} /></div></div>{order.status === 'requested' && <button type="button" onClick={() => cancelMutation.mutate(order)} className="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700">Cancel reservation</button>}</div>{order.status === 'completed' && !reviewedOrderIds.has(order.id) && <form className="mt-4 grid grid-cols-1 gap-3 border-t border-gray-100 pt-4 sm:grid-cols-[10rem_1fr_auto]" onSubmit={(event) => { event.preventDefault(); reviewMutation.mutate({ order, rating: reviewDrafts[`rating-${order.id}`] || 5, comment: reviewDrafts[`comment-${order.id}`] || '' }); }}><label className="text-xs font-medium text-gray-600">Rate your pickup<select value={reviewDrafts[`rating-${order.id}`] || 5} onChange={(event) => setReviewDrafts((current) => ({ ...current, [`rating-${order.id}`]: event.target.value }))} className="input-field mt-1"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label><label className="text-xs font-medium text-gray-600">Leave feedback<input value={reviewDrafts[`comment-${order.id}`] || ''} onChange={(event) => setReviewDrafts((current) => ({ ...current, [`comment-${order.id}`]: event.target.value }))} maxLength={500} required placeholder="Share a helpful note about the product or pickup" className="input-field mt-1" /></label><button type="submit" disabled={reviewMutation.isPending} className="btn-primary self-end disabled:opacity-50">Send review</button></form>}{order.status === 'completed' && reviewedOrderIds.has(order.id) && <p className="mt-3 text-sm font-medium text-green-700">Thanks for reviewing this reservation.</p>}</article>)}{buyerOrders.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">You have no reservations yet. Reserve an available product above to get started.</p>}</div>
+            <div className="mt-4 space-y-3">{buyerOrders.map((order) => <article key={order.id} className="rounded-lg border border-gray-200 p-4"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-semibold text-gray-900">{order.product} <span className="font-normal text-gray-500">× {order.quantity}</span></p><p className="mt-1 text-sm text-gray-600">{order.sellerTeam} · {order.event} · {money(order.price)}</p><div className="mt-2"><StatusBadge status={order.status} /></div></div>{order.status === 'requested' && <button type="button" onClick={() => cancelMutation.mutate(order)} className="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700">Cancel reservation</button>}</div>{order.status === 'completed' && !reviewedOrderIds.has(String(order.id)) && <form className="mt-4 grid grid-cols-1 gap-3 border-t border-gray-100 pt-4 sm:grid-cols-[10rem_1fr_auto]" onSubmit={(event) => { event.preventDefault(); reviewMutation.mutate({ order, rating: reviewDrafts[`rating-${order.id}`] || 5, comment: reviewDrafts[`comment-${order.id}`] || '' }); }}><label className="text-xs font-medium text-gray-600">Rate your pickup<select value={reviewDrafts[`rating-${order.id}`] || 5} onChange={(event) => setReviewDrafts((current) => ({ ...current, [`rating-${order.id}`]: event.target.value }))} className="input-field mt-1"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label><label className="text-xs font-medium text-gray-600">Leave feedback<input value={reviewDrafts[`comment-${order.id}`] || ''} onChange={(event) => setReviewDrafts((current) => ({ ...current, [`comment-${order.id}`]: event.target.value }))} maxLength={500} required placeholder="Share a helpful note about the product or pickup" className="input-field mt-1" /></label><button type="submit" disabled={reviewMutation.isPending} className="btn-primary self-end disabled:opacity-50">Send review</button></form>}{order.status === 'completed' && reviewedOrderIds.has(String(order.id)) && <p className="mt-3 text-sm font-medium text-green-700">Thanks for reviewing this reservation.</p>}</article>)}{buyerOrders.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">You have no reservations yet. Reserve an available product above to get started.</p>}</div>
           </section>}
           <section hidden={activeView !== 'events'} className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 id="upcoming-events" className="text-lg font-semibold text-gray-900">Upcoming campus events</h2><div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{events.map((event) => <article key={event.id} className="rounded-lg bg-primary-50 p-4"><h3 className="font-semibold text-primary-900">{event.name}</h3><p className="mt-1 text-sm text-primary-800">{event.date} · {event.location}</p></article>)}{events.length === 0 && <p className="text-sm text-gray-600">No upcoming events have been posted.</p>}</div></section>
           <section hidden={activeView !== 'messages'} className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 id="my-messages" className="text-lg font-semibold text-gray-900">My messages to sellers</h2><p className="mt-1 text-sm text-gray-600">See replies to your product questions.</p><div className="mt-4 space-y-3">{buyerMessages.map((message) => <article key={message.id} className="rounded-lg border border-gray-200 p-4"><p className="font-semibold text-gray-900">{message.productTitle} · {message.sellerTeam}</p><p className="mt-2 text-sm text-gray-700">You: {message.message}</p>{message.response ? <p className="mt-2 rounded-lg bg-primary-50 p-3 text-sm text-primary-900">Seller: {message.response}</p> : <p className="mt-2 text-xs text-gray-500">Waiting for seller reply</p>}</article>)}{buyerMessages.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">Messages you send from a product card and seller replies will appear here.</p>}</div></section>
