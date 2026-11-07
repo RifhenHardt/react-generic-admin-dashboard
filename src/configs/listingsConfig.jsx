@@ -31,7 +31,7 @@ export const listingsConfig = {
       label: 'Seller / Team',
       render: (row) => (
         <div className="flex items-center gap-2">
-          <span className="text-gray-700">{row.sellerTeam}</span>
+          <div><span className="font-medium text-gray-900">{row.sellerName || row.sellerTeam}</span><p className="mt-1 text-xs text-gray-500">{row.sellerTeam}</p></div>
           {row.sellerVerified && <span className="text-primary-600" title="Verified campus seller">✓</span>}
         </div>
       ),
@@ -69,6 +69,7 @@ export const listingsConfig = {
   actions: [{ label: 'Add Product', variant: 'primary', icon: '+' }],
   formFields: [
     { name: 'title', label: 'Product name', type: 'text', required: true },
+    { name: 'sellerName', label: 'Seller name', type: 'text', required: true },
     { name: 'sellerTeam', label: 'Seller or project team', type: 'text', required: true },
     { name: 'category', label: 'Category', type: 'select', required: true, options: categories.map((value) => ({ value, label: value })) },
     { name: 'event', label: 'Event', type: 'text', required: true, placeholder: 'e.g. Campus Makers Fair' },

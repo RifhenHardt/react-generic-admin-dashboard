@@ -44,6 +44,11 @@ const initializeData = () => {
   const listings = readEntity('listings') || [];
   let migrated = false;
   listings.forEach((listing) => {
+    if (!listing.sellerName) {
+      const seller = (mockData.users || []).find((user) => user.teamName?.trim().toLowerCase() === listing.sellerTeam?.trim().toLowerCase());
+      listing.sellerName = seller?.name || listing.sellerTeam || 'Campus seller';
+      migrated = true;
+    }
     if (listing.status === 'pending' && listing.sellerVerified) {
       listing.status = 'active';
       migrated = true;

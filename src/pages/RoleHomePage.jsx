@@ -36,6 +36,7 @@ const RoleHomePage = ({ user }) => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All categories');
+  const [sellerFilter, setSellerFilter] = useState('all');
   const [quantities, setQuantities] = useState({});
   const [stockDrafts, setStockDrafts] = useState({});
   const [editingListingId, setEditingListingId] = useState(null);
@@ -64,11 +65,20 @@ const RoleHomePage = ({ user }) => {
   const completedOrders = sellerOrders.filter((order) => order.status === 'completed');
   const completedSales = completedOrders.reduce((sum, order) => sum + Number(order.price || 0), 0);
   const lowStockProducts = teamProducts.filter((product) => Number(product.stock) <= Number(product.reorderAt ?? 5));
+  const sellerOptions = useMemo(() => {
+    const sellers = new Map();
+    products.filter((product) => product.status === 'active' && Number(product.stock) > 0).forEach((product) => {
+      const team = String(product.sellerTeam || '').trim();
+      if (team && !sellers.has(team)) sellers.set(team, { team, name: product.sellerName || team });
+    });
+    return Array.from(sellers.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [products]);
   const visibleProducts = useMemo(() => products.filter((product) => {
-    const matchesSearch = `${product.title} ${product.description} ${product.category} ${product.event} ${product.sellerTeam}`.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = `${product.title} ${product.description} ${product.category} ${product.event} ${product.sellerName} ${product.sellerTeam}`.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = category === 'All categories' || product.category === category;
-    return product.status === 'active' && Number(product.stock) > 0 && matchesSearch && matchesCategory;
-  }), [products, search, category]);
+    const matchesSeller = sellerFilter === 'all' || product.sellerTeam === sellerFilter;
+    return product.status === 'active' && Number(product.stock) > 0 && matchesSearch && matchesCategory && matchesSeller;
+  }), [products, search, category, sellerFilter]);
 
   const refreshData = () => {
     queryClient.invalidateQueries({ queryKey: ['listings'] });
@@ -120,6 +130,7 @@ const RoleHomePage = ({ user }) => {
       const details = {
         ...form,
         title: form.title.trim(),
+        sellerName: user.name,
         sellerTeam: user.teamName,
         price: Number(form.price),
         stock: Number(form.stock),
@@ -303,13 +314,13 @@ const RoleHomePage = ({ user }) => {
       ) : (
         <>
           {activeView === 'marketplace' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="flex flex-col gap-3 sm:flex-row"><label className="flex-1 text-sm font-medium text-gray-700">Search products<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search products, teams, or events" className="input-field mt-1" /></label><label className="text-sm font-medium text-gray-700 sm:w-64">Category<select value={category} onChange={(event) => setCategory(event.target.value)} className="input-field mt-1">{categories.map((item) => <option key={item}>{item}</option>)}</select></label></div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3"><label className="text-sm font-medium text-gray-700">Search products<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search products, sellers, or events" className="input-field mt-1" /></label><label className="text-sm font-medium text-gray-700">Category<select value={category} onChange={(event) => setCategory(event.target.value)} className="input-field mt-1">{categories.map((item) => <option key={item}>{item}</option>)}</select></label><label className="text-sm font-medium text-gray-700">Seller<select value={sellerFilter} onChange={(event) => setSellerFilter(event.target.value)} className="input-field mt-1"><option value="all">All sellers</option>{sellerOptions.map((seller) => <option key={seller.team} value={seller.team}>{seller.name}{seller.name !== seller.team ? ` · ${seller.team}` : ''}</option>)}</select></label></div>
             <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {visibleProducts.map((product) => <article key={product.id} className="flex flex-col rounded-xl border border-gray-200 p-4">
                 {product.imageUrl && <img src={product.imageUrl} alt={product.title} className="mb-3 h-40 w-full rounded-lg object-cover" />}
                 <div className="flex items-start justify-between gap-2"><div><p className="text-xs font-semibold uppercase tracking-wide text-primary-700">{product.category}</p><h3 className="mt-1 text-lg font-semibold text-gray-900">{product.title}</h3></div><span className="shrink-0 font-bold text-primary-800">{money(product.price)}</span></div>
                 <p className="mt-2 flex-1 text-sm text-gray-600">{product.description}</p>
-                <div className="mt-3 rounded-lg bg-gray-50 p-3 text-sm"><p className="font-medium text-gray-800">{product.sellerTeam}</p><p className="mt-1 text-gray-600">{product.event} · Booth {product.booth}</p><p className="mt-1 text-xs text-gray-500">{product.stock} available</p></div>
+                <div className="mt-3 rounded-lg bg-gray-50 p-3 text-sm"><p className="font-semibold text-gray-900">{product.sellerName || product.sellerTeam}</p><p className="mt-1 text-gray-600">{product.sellerTeam}</p><p className="mt-1 text-gray-600">{product.event} · Booth {product.booth}</p><p className="mt-1 text-xs text-gray-500">{product.stock} available</p></div>
                 <div className="mt-3 flex items-end gap-2"><label className="text-xs font-medium text-gray-600">Qty<input aria-label={`Quantity for ${product.title}`} type="number" min="1" max={product.stock} value={quantities[product.id] || 1} onChange={(event) => setQuantities((current) => ({ ...current, [product.id]: event.target.value }))} className="input-field mt-1 w-20" /></label><button type="button" disabled={reserveMutation.isPending || user.status !== 'active'} onClick={() => reserveMutation.mutate({ product, quantity: Number(quantities[product.id] || 1) })} className="btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50">Reserve for pickup</button></div>
                 <form className="mt-4 border-t border-gray-100 pt-3" onSubmit={(event) => { event.preventDefault(); messageMutation.mutate({ product, message: contactDrafts[product.id] || '' }); }}><label className="text-xs font-medium text-gray-600">Ask the seller a question<textarea value={contactDrafts[product.id] || ''} onChange={(event) => setContactDrafts((current) => ({ ...current, [product.id]: event.target.value }))} maxLength={500} rows={2} placeholder="Ask about sizes, ingredients, or pickup details" className="input-field mt-1" /></label><button type="submit" disabled={messageMutation.isPending || user.status !== 'active'} className="mt-2 rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 disabled:opacity-50">Message seller</button></form>
               </article>)}
