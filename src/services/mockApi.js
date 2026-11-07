@@ -39,6 +39,17 @@ const initializeData = () => {
   Object.entries(mockData).forEach(([entityName, seedData]) => {
     if (!readEntity(entityName)) writeEntity(entityName, seedData);
   });
+
+  // Publish listings from verified sellers even if they were created under the old review-required flow.
+  const listings = readEntity('listings') || [];
+  let migrated = false;
+  listings.forEach((listing) => {
+    if (listing.status === 'pending' && listing.sellerVerified) {
+      listing.status = 'active';
+      migrated = true;
+    }
+  });
+  if (migrated) writeEntity('listings', listings);
 };
 
 initializeData();

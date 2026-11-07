@@ -111,12 +111,12 @@ const RoleHomePage = ({ user }) => {
       if (editingListingId) {
         const listing = teamProducts.find((item) => item.id === editingListingId);
         if (!listing) throw new Error('You can only edit products submitted by your team.');
-        return mockApi.update('listings', editingListingId, { ...details, status: 'pending' });
+        return mockApi.update('listings', editingListingId, { ...details, status: 'active' });
       }
-      return mockApi.create('listings', { ...details, status: 'pending' });
+      return mockApi.create('listings', { ...details, status: 'active' });
     },
     onSuccess: () => {
-      setNotice(editingListingId ? 'Product changes submitted for admin review.' : 'Product submitted. It will appear in the marketplace after admin review.');
+      setNotice(editingListingId ? 'Product changes saved and are now live in the marketplace.' : 'Product added and now live in the marketplace.');
       setEditingListingId(null);
       setListingForm({ title: '', category: categories[1], event: '', booth: '', price: '', stock: '', reorderAt: 5, imageUrl: '', description: '' });
       refreshData();
@@ -192,7 +192,7 @@ const RoleHomePage = ({ user }) => {
     ? { overview: 'Seller workspace', sales: 'Sales summary', submit: 'Submit products', products: 'My products', orders: 'Student reservations', messages: 'Buyer messages', feedback: 'Buyer feedback' }
     : { marketplace: 'Campus marketplace', reservations: 'My reservations', events: 'Campus events', messages: 'My messages' };
   const pageDescriptions = isSeller
-    ? { overview: 'Welcome, ' + (user.teamName || user.name) + '. Manage your campus-market team from here.', sales: 'Review completed pickup totals, open reservations, and inventory alerts.', submit: 'Create a product listing for admin review.', products: 'Edit listings and keep inventory accurate.', orders: 'Respond to reservations and coordinate campus pickup.', messages: 'Answer product questions from students.', feedback: 'Review ratings and feedback from completed pickups.' }
+    ? { overview: 'Welcome, ' + (user.teamName || user.name) + '. Manage your campus-market team from here.', sales: 'Review completed pickup totals, open reservations, and inventory alerts.', submit: 'Add a product and publish it to the marketplace immediately.', products: 'Edit listings and keep inventory accurate.', orders: 'Respond to reservations and coordinate campus pickup.', messages: 'Answer product questions from students.', feedback: 'Review ratings and feedback from completed pickups.' }
     : { marketplace: 'Discover student-made food, clothing, accessories, souvenirs, and project goods. Reserve products for campus pickup.', reservations: 'Review requests, cancel pending reservations, and leave feedback after pickup.', events: 'See upcoming campus markets and student events.', messages: 'Check replies to questions you sent to sellers.' };
 
   return (
@@ -229,8 +229,8 @@ const RoleHomePage = ({ user }) => {
           {activeView === 'sales' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 className="text-lg font-semibold text-gray-900">Completed reservations</h2><p className="mt-1 text-sm text-gray-600">These totals come from orders marked picked up; payments and payouts are not processed here.</p><div className="mt-4 space-y-3">{completedOrders.map((order) => <article key={order.id} className="flex flex-wrap justify-between gap-2 rounded-lg bg-gray-50 p-3"><div><p className="font-medium text-gray-900">{order.product} × {order.quantity}</p><p className="mt-1 text-sm text-gray-600">{order.event} · {order.orderDate}</p></div><span className="font-semibold text-primary-800">{money(order.price)}</span></article>)}{completedOrders.length === 0 && <p className="text-sm text-gray-600">Completed reservations will appear here.</p>}</div></section>}
 
           {activeView === 'submit' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 id="seller-submit" className="text-lg font-semibold text-gray-900">{editingListingId ? 'Edit your product' : 'Submit a product for review'}</h2>
-            <p className="mt-1 text-sm text-gray-600">Approved products are shown to students. Include pickup details and any food ingredients or product materials. Changes to an approved product go back to admin review.</p>
+            <h2 id="seller-submit" className="text-lg font-semibold text-gray-900">{editingListingId ? 'Edit your product' : 'Add a product to the marketplace'}</h2>
+            <p className="mt-1 text-sm text-gray-600">Your product appears in the marketplace immediately after saving. Include pickup details and any food ingredients or product materials.</p>
             <form onSubmit={submitListing} className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="text-sm font-medium text-gray-700">Product name<input name="title" value={listingForm.title} onChange={updateListingField} required maxLength={100} placeholder="e.g., Ube Cheese Pandesal" className="input-field mt-1" /></label>
               <label className="text-sm font-medium text-gray-700">Category<select name="category" value={listingForm.category} onChange={updateListingField} className="input-field mt-1">{categories.slice(1).map((item) => <option key={item}>{item}</option>)}</select></label>
@@ -241,7 +241,7 @@ const RoleHomePage = ({ user }) => {
               <label className="text-sm font-medium text-gray-700">Available quantity<input name="stock" type="number" min="1" step="1" value={listingForm.stock} onChange={updateListingField} required placeholder="e.g., 30" className="input-field mt-1" /></label>
               <label className="text-sm font-medium text-gray-700">Low-stock alert at<input name="reorderAt" type="number" min="0" step="1" value={listingForm.reorderAt} onChange={updateListingField} required placeholder="e.g., 5" className="input-field mt-1" /><span className="mt-1 block text-xs font-normal text-gray-500">We’ll flag the item when stock reaches this amount.</span></label>
               <label className="text-sm font-medium text-gray-700 sm:col-span-2">Description, ingredients, or materials<textarea name="description" value={listingForm.description} onChange={updateListingField} required maxLength={500} rows={3} placeholder="Describe the product. For food, list common allergens and ingredients." className="input-field mt-1" /></label>
-              <div className="flex gap-3 sm:col-span-2"><button type="submit" disabled={saveListingMutation.isPending || user.status !== 'active'} className="btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50">{saveListingMutation.isPending ? 'Saving…' : editingListingId ? 'Save changes for review' : 'Submit product for review'}</button>{editingListingId && <button type="button" onClick={() => { setEditingListingId(null); setListingForm({ title: '', category: categories[1], event: '', booth: '', price: '', stock: '', reorderAt: 5, imageUrl: '', description: '' }); }} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700">Cancel</button>}</div>
+              <div className="flex gap-3 sm:col-span-2"><button type="submit" disabled={saveListingMutation.isPending || user.status !== 'active'} className="btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50">{saveListingMutation.isPending ? 'Saving…' : editingListingId ? 'Save and publish changes' : 'Add product now'}</button>{editingListingId && <button type="button" onClick={() => { setEditingListingId(null); setListingForm({ title: '', category: categories[1], event: '', booth: '', price: '', stock: '', reorderAt: 5, imageUrl: '', description: '' }); }} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700">Cancel</button>}</div>
             </form>
           </section>}
 
