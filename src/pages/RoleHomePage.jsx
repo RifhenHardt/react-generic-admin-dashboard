@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { mockApi } from '../services/mockApi';
 import StatusBadge from '../components/common/StatusBadge';
 
@@ -8,7 +9,12 @@ const loadAll = (entityName) => mockApi.getAll(entityName, { page: 1, pageSize: 
 const money = (value) => `₱${Number(value || 0).toFixed(2)}`;
 
 const RoleHomePage = ({ user }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const isSeller = user.role === 'seller';
+  const activeView = location.pathname === '/'
+    ? (isSeller ? 'overview' : 'marketplace')
+    : location.pathname.split('/')[2];
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All categories');
@@ -179,40 +185,50 @@ const RoleHomePage = ({ user }) => {
   const editListing = (product) => {
     setEditingListingId(product.id);
     setListingForm({ title: product.title, category: product.category, event: product.event, booth: product.booth, price: product.price, stock: product.stock, reorderAt: product.reorderAt ?? 5, imageUrl: product.imageUrl || '', description: product.description || '' });
-    document.getElementById('seller-submit')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    navigate('/seller/submit');
   };
+
+  const pageTitles = isSeller
+    ? { overview: 'Seller workspace', sales: 'Sales summary', submit: 'Submit products', products: 'My products', orders: 'Student reservations', messages: 'Buyer messages', feedback: 'Buyer feedback' }
+    : { marketplace: 'Campus marketplace', reservations: 'My reservations', events: 'Campus events', messages: 'My messages' };
+  const pageDescriptions = isSeller
+    ? { overview: 'Welcome, ' + (user.teamName || user.name) + '. Manage your campus-market team from here.', sales: 'Review completed pickup totals, open reservations, and inventory alerts.', submit: 'Create a product listing for admin review.', products: 'Edit listings and keep inventory accurate.', orders: 'Respond to reservations and coordinate campus pickup.', messages: 'Answer product questions from students.', feedback: 'Review ratings and feedback from completed pickups.' }
+    : { marketplace: 'Discover student-made food, clothing, accessories, souvenirs, and project goods. Reserve products for campus pickup.', reservations: 'Review requests, cancel pending reservations, and leave feedback after pickup.', events: 'See upcoming campus markets and student events.', messages: 'Check replies to questions you sent to sellers.' };
 
   return (
     <div className="min-w-0 p-4 sm:p-6 lg:p-8">
-      <p className="text-sm font-semibold uppercase tracking-wide text-primary-700">{isSeller ? 'Seller workspace' : 'Student marketplace'}</p>
-      <h1 className="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">{isSeller ? `Welcome, ${user.teamName || user.name}` : 'Find something for your next campus event'}</h1>
-      <p className="mt-2 max-w-3xl text-sm text-gray-600">{isSeller
-        ? 'Submit products for campus events, keep your stock current, and respond to student reservations.'
-        : 'Discover student-made food, clothing, accessories, souvenirs, and project goods. Reserve products for campus pickup.'}</p>
+      <p className="text-sm font-semibold uppercase tracking-wide text-primary-700">{isSeller ? 'Seller account' : 'Student account'}</p>
+      <h1 className="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">{pageTitles[activeView] || (isSeller ? 'Seller workspace' : 'Campus marketplace')}</h1>
+      <p className="mt-2 max-w-3xl text-sm text-gray-600">{pageDescriptions[activeView] || 'Manage your campus market activity.'}</p>
 
       {notice && <div role="status" className="mt-5 flex items-start justify-between gap-4 rounded-lg border border-primary-200 bg-primary-50 p-3 text-sm text-primary-900"><span>{notice}</span><button type="button" onClick={() => setNotice('')} className="font-semibold" aria-label="Dismiss message">×</button></div>}
 
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      {isSeller && activeView === 'overview' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div><h2 className="text-lg font-semibold text-gray-900">Your account</h2><p className="mt-1 text-sm text-gray-600">{user.name} · {user.email}</p>{user.teamName && <p className="mt-1 text-sm text-gray-600">Seller group: {user.teamName}</p>}</div>
           <StatusBadge status={user.status} />
         </div>
         {user.status === 'pending verification' && <p className="mt-4 rounded-lg bg-yellow-50 p-3 text-sm text-yellow-900">An admin needs to verify your seller account before your products can be submitted. You can prepare your product details while you wait.</p>}
         {user.status === 'suspended' && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800">This account is suspended. Contact a marketplace admin for help.</p>}
-      </section>
+      </section>}
+      {isSeller && user.status === 'pending verification' && <p className="mt-6 rounded-lg bg-yellow-50 p-4 text-sm text-yellow-900">Your seller account is waiting for admin verification. Product submissions are disabled until approval.</p>}
 
       {isSeller ? (
         <>
-          <section id="seller-performance" className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Seller performance summary">
+          {(activeView === 'overview' || activeView === 'sales') && <section id="seller-performance" className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Seller performance summary">
             {[
               { label: 'Completed order total', value: money(completedSales), detail: 'Reservation totals, before any fees' },
               { label: 'Completed pickups', value: completedOrders.length, detail: 'Orders marked picked up' },
               { label: 'Products needing stock', value: lowStockProducts.length, detail: 'At or below your reorder alert' },
               { label: 'Buyer messages', value: sellerMessages.filter((message) => !message.response).length, detail: 'Waiting for your reply' },
             ].map((stat) => <article key={stat.label} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"><p className="text-sm text-gray-500">{stat.label}</p><p className="mt-2 text-2xl font-bold text-gray-900">{stat.value}</p><p className="mt-1 text-xs text-gray-500">{stat.detail}</p></article>)}
-          </section>
+          </section>}
 
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          {activeView === 'overview' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 className="text-lg font-semibold text-gray-900">Quick links</h2><p className="mt-1 text-sm text-gray-600">Jump to the tasks your team uses most.</p><div className="mt-4 flex flex-wrap gap-3"><a href="/seller/products" className="rounded-md bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-800">Manage products</a><a href="/seller/orders" className="rounded-md bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-800">Review reservations</a><a href="/seller/messages" className="rounded-md bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-800">Reply to buyers</a></div></section>}
+
+          {activeView === 'sales' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 className="text-lg font-semibold text-gray-900">Completed reservations</h2><p className="mt-1 text-sm text-gray-600">These totals come from orders marked picked up; payments and payouts are not processed here.</p><div className="mt-4 space-y-3">{completedOrders.map((order) => <article key={order.id} className="flex flex-wrap justify-between gap-2 rounded-lg bg-gray-50 p-3"><div><p className="font-medium text-gray-900">{order.product} × {order.quantity}</p><p className="mt-1 text-sm text-gray-600">{order.event} · {order.orderDate}</p></div><span className="font-semibold text-primary-800">{money(order.price)}</span></article>)}{completedOrders.length === 0 && <p className="text-sm text-gray-600">Completed reservations will appear here.</p>}</div></section>}
+
+          {activeView === 'submit' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <h2 id="seller-submit" className="text-lg font-semibold text-gray-900">{editingListingId ? 'Edit your product' : 'Submit a product for review'}</h2>
             <p className="mt-1 text-sm text-gray-600">Approved products are shown to students. Include pickup details and any food ingredients or product materials. Changes to an approved product go back to admin review.</p>
             <form onSubmit={submitListing} className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -227,9 +243,9 @@ const RoleHomePage = ({ user }) => {
               <label className="text-sm font-medium text-gray-700 sm:col-span-2">Description, ingredients, or materials<textarea name="description" value={listingForm.description} onChange={updateListingField} required maxLength={500} rows={3} placeholder="Describe the product. For food, list common allergens and ingredients." className="input-field mt-1" /></label>
               <div className="flex gap-3 sm:col-span-2"><button type="submit" disabled={saveListingMutation.isPending || user.status !== 'active'} className="btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50">{saveListingMutation.isPending ? 'Saving…' : editingListingId ? 'Save changes for review' : 'Submit product for review'}</button>{editingListingId && <button type="button" onClick={() => { setEditingListingId(null); setListingForm({ title: '', category: categories[1], event: '', booth: '', price: '', stock: '', reorderAt: 5, imageUrl: '', description: '' }); }} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700">Cancel</button>}</div>
             </form>
-          </section>
+          </section>}
 
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          {activeView === 'products' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 id="seller-products" className="text-lg font-semibold text-gray-900">Your products</h2><p className="mt-1 text-sm text-gray-600">Track review status and update your available quantity.</p></div><span className="rounded-full bg-primary-50 px-3 py-1 text-sm font-semibold text-primary-800">{teamProducts.length} total</span></div>
             <div className="mt-4 space-y-3">
               {teamProducts.map((product) => <article key={product.id} className="flex flex-col gap-3 rounded-lg border border-gray-200 p-4 lg:flex-row lg:items-start lg:justify-between">
@@ -249,26 +265,26 @@ const RoleHomePage = ({ user }) => {
               </article>)}
               {teamProducts.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">No products submitted yet. Add your first product above.</p>}
             </div>
-          </section>
+          </section>}
 
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          {activeView === 'orders' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <div><h2 id="seller-orders" className="text-lg font-semibold text-gray-900">Student reservations</h2><p className="mt-1 text-sm text-gray-600">Accept requests, prepare orders, and mark them picked up.</p></div>
             <div className="mt-4 space-y-3">{sellerOrders.map((order) => <article key={order.id} className="flex flex-col gap-3 rounded-lg border border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-semibold text-gray-900">{order.product} <span className="font-normal text-gray-500">× {order.quantity}</span></p><p className="mt-1 text-sm text-gray-600">{order.customer} · {order.event} · {money(order.price)}</p><div className="mt-2"><StatusBadge status={order.status} /></div></div>{order.status === 'requested' && <div className="flex gap-2"><button type="button" onClick={() => orderStatusMutation.mutate({ order, status: 'accepted' })} className="rounded-md bg-primary-700 px-3 py-2 text-sm font-semibold text-white">Accept</button><button type="button" onClick={() => orderStatusMutation.mutate({ order, status: 'cancelled' })} className="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700">Decline</button></div>}{order.status === 'accepted' && <button type="button" onClick={() => orderStatusMutation.mutate({ order, status: 'ready for pickup' })} className="rounded-md bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-800">Mark ready for pickup</button>}{order.status === 'ready for pickup' && <button type="button" onClick={() => orderStatusMutation.mutate({ order, status: 'completed' })} className="rounded-md bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-800">Mark picked up</button>}</article>)}{sellerOrders.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">Student reservations for your products will appear here.</p>}</div>
-          </section>
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          </section>}
+          {activeView === 'messages' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <h2 id="seller-messages" className="text-lg font-semibold text-gray-900">Buyer messages</h2>
             <p className="mt-1 text-sm text-gray-600">Answer questions about your products and coordinate pickup details.</p>
             <div className="mt-4 space-y-3">{sellerMessages.map((message) => <article key={message.id} className="rounded-lg border border-gray-200 p-4"><div className="flex flex-wrap justify-between gap-2"><p className="font-semibold text-gray-900">{message.senderName} · {message.productTitle}</p><StatusBadge status={message.status} /></div><p className="mt-2 text-sm text-gray-700">{message.message}</p>{message.response && <p className="mt-3 rounded-lg bg-primary-50 p-3 text-sm text-primary-900"><span className="font-semibold">Your reply:</span> {message.response}</p>}{!message.response && <form className="mt-3 flex flex-col gap-2 sm:flex-row" onSubmit={(event) => { event.preventDefault(); replyMutation.mutate({ message, response: replyDrafts[message.id] || '' }); }}><input value={replyDrafts[message.id] || ''} onChange={(event) => setReplyDrafts((current) => ({ ...current, [message.id]: event.target.value }))} maxLength={500} required placeholder="Write a reply" className="input-field flex-1" /><button type="submit" disabled={replyMutation.isPending} className="btn-primary disabled:opacity-50">Send reply</button></form>}</article>)}{sellerMessages.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">Buyer product questions will appear here.</p>}</div>
-          </section>
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          </section>}
+          {activeView === 'feedback' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <h2 id="seller-feedback" className="text-lg font-semibold text-gray-900">Buyer feedback</h2>
             <p className="mt-1 text-sm text-gray-600">Use completed-order reviews to learn what buyers think of your products.</p>
             <div className="mt-4 space-y-3">{sellerReviews.map((review) => <article key={review.id} className="rounded-lg bg-gray-50 p-4"><p className="font-semibold text-gray-900">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)} <span className="ml-2 text-sm font-medium">{review.product}</span></p><p className="mt-1 text-sm text-gray-700">{review.comment}</p><p className="mt-2 text-xs text-gray-500">{review.studentName}</p></article>)}{sellerReviews.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">Student feedback will appear here after a completed reservation is reviewed.</p>}</div>
-          </section>
+          </section>}
         </>
       ) : (
         <>
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          {activeView === 'marketplace' && <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <div className="flex flex-col gap-3 sm:flex-row"><label className="flex-1 text-sm font-medium text-gray-700">Search products<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search products, teams, or events" className="input-field mt-1" /></label><label className="text-sm font-medium text-gray-700 sm:w-64">Category<select value={category} onChange={(event) => setCategory(event.target.value)} className="input-field mt-1">{categories.map((item) => <option key={item}>{item}</option>)}</select></label></div>
             <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {visibleProducts.map((product) => <article key={product.id} className="flex flex-col rounded-xl border border-gray-200 p-4">
@@ -282,14 +298,13 @@ const RoleHomePage = ({ user }) => {
               {!listingsLoading && visibleProducts.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600 md:col-span-2 xl:col-span-3">No products match your search. Try another term or category.</p>}
               {listingsLoading && <p className="text-sm text-gray-500 md:col-span-2 xl:col-span-3">Loading campus products…</p>}
             </div>
-          </section>
-
-          <section id="my-reservations" className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+          </section>}
+          {activeView === 'reservations' && <section id="my-reservations" className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
             <div><h2 className="text-lg font-semibold text-gray-900">My reservations</h2><p className="mt-1 text-sm text-gray-600">Follow each request through seller acceptance and campus pickup.</p></div>
             <div className="mt-4 space-y-3">{buyerOrders.map((order) => <article key={order.id} className="rounded-lg border border-gray-200 p-4"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-semibold text-gray-900">{order.product} <span className="font-normal text-gray-500">× {order.quantity}</span></p><p className="mt-1 text-sm text-gray-600">{order.sellerTeam} · {order.event} · {money(order.price)}</p><div className="mt-2"><StatusBadge status={order.status} /></div></div>{order.status === 'requested' && <button type="button" onClick={() => cancelMutation.mutate(order)} className="rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700">Cancel reservation</button>}</div>{order.status === 'completed' && !reviewedOrderIds.has(order.id) && <form className="mt-4 grid grid-cols-1 gap-3 border-t border-gray-100 pt-4 sm:grid-cols-[10rem_1fr_auto]" onSubmit={(event) => { event.preventDefault(); reviewMutation.mutate({ order, rating: reviewDrafts[`rating-${order.id}`] || 5, comment: reviewDrafts[`comment-${order.id}`] || '' }); }}><label className="text-xs font-medium text-gray-600">Rate your pickup<select value={reviewDrafts[`rating-${order.id}`] || 5} onChange={(event) => setReviewDrafts((current) => ({ ...current, [`rating-${order.id}`]: event.target.value }))} className="input-field mt-1"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label><label className="text-xs font-medium text-gray-600">Leave feedback<input value={reviewDrafts[`comment-${order.id}`] || ''} onChange={(event) => setReviewDrafts((current) => ({ ...current, [`comment-${order.id}`]: event.target.value }))} maxLength={500} required placeholder="Share a helpful note about the product or pickup" className="input-field mt-1" /></label><button type="submit" disabled={reviewMutation.isPending} className="btn-primary self-end disabled:opacity-50">Send review</button></form>}{order.status === 'completed' && reviewedOrderIds.has(order.id) && <p className="mt-3 text-sm font-medium text-green-700">Thanks for reviewing this reservation.</p>}</article>)}{buyerOrders.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">You have no reservations yet. Reserve an available product above to get started.</p>}</div>
-          </section>
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 id="upcoming-events" className="text-lg font-semibold text-gray-900">Upcoming campus events</h2><div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{events.map((event) => <article key={event.id} className="rounded-lg bg-primary-50 p-4"><h3 className="font-semibold text-primary-900">{event.name}</h3><p className="mt-1 text-sm text-primary-800">{event.date} · {event.location}</p></article>)}{events.length === 0 && <p className="text-sm text-gray-600">No upcoming events have been posted.</p>}</div></section>
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 id="my-messages" className="text-lg font-semibold text-gray-900">My messages to sellers</h2><p className="mt-1 text-sm text-gray-600">See replies to your product questions.</p><div className="mt-4 space-y-3">{buyerMessages.map((message) => <article key={message.id} className="rounded-lg border border-gray-200 p-4"><p className="font-semibold text-gray-900">{message.productTitle} · {message.sellerTeam}</p><p className="mt-2 text-sm text-gray-700">You: {message.message}</p>{message.response ? <p className="mt-2 rounded-lg bg-primary-50 p-3 text-sm text-primary-900">Seller: {message.response}</p> : <p className="mt-2 text-xs text-gray-500">Waiting for seller reply</p>}</article>)}{buyerMessages.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">Messages you send from a product card and seller replies will appear here.</p>}</div></section>
+          </section>}
+          <section hidden={activeView !== 'events'} className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 id="upcoming-events" className="text-lg font-semibold text-gray-900">Upcoming campus events</h2><div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{events.map((event) => <article key={event.id} className="rounded-lg bg-primary-50 p-4"><h3 className="font-semibold text-primary-900">{event.name}</h3><p className="mt-1 text-sm text-primary-800">{event.date} · {event.location}</p></article>)}{events.length === 0 && <p className="text-sm text-gray-600">No upcoming events have been posted.</p>}</div></section>
+          <section hidden={activeView !== 'messages'} className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><h2 id="my-messages" className="text-lg font-semibold text-gray-900">My messages to sellers</h2><p className="mt-1 text-sm text-gray-600">See replies to your product questions.</p><div className="mt-4 space-y-3">{buyerMessages.map((message) => <article key={message.id} className="rounded-lg border border-gray-200 p-4"><p className="font-semibold text-gray-900">{message.productTitle} · {message.sellerTeam}</p><p className="mt-2 text-sm text-gray-700">You: {message.message}</p>{message.response ? <p className="mt-2 rounded-lg bg-primary-50 p-3 text-sm text-primary-900">Seller: {message.response}</p> : <p className="mt-2 text-xs text-gray-500">Waiting for seller reply</p>}</article>)}{buyerMessages.length === 0 && <p className="rounded-lg bg-gray-50 p-4 text-sm text-gray-600">Messages you send from a product card and seller replies will appear here.</p>}</div></section>
         </>
       )}
 

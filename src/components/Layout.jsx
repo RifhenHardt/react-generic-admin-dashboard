@@ -78,18 +78,18 @@ const Layout = ({ children }) => {
     : user?.role === 'student'
       ? [
           { ...navItems[0], label: 'Marketplace' },
-          { ...navItems[6], path: '/#my-reservations', label: 'My reservations' },
-          { ...navItems[1], path: '/#upcoming-events', label: 'Campus events' },
-          { ...navItems[6], path: '/#my-messages', label: 'My messages' },
+          { ...navItems[6], path: '/student/reservations', label: 'My reservations' },
+          { ...navItems[1], path: '/student/events', label: 'Campus events' },
+          { ...navItems[6], path: '/student/messages', label: 'My messages' },
         ]
       : [
           { ...navItems[0], label: 'Seller workspace' },
-          { ...navItems[0], path: '/#seller-performance', label: 'Sales summary' },
-          { ...navItems[2], path: '/#seller-submit', label: 'Submit products' },
-          { ...navItems[2], path: '/#seller-products', label: 'My products' },
-          { ...navItems[6], path: '/#seller-orders', label: 'Student reservations' },
-          { ...navItems[6], path: '/#seller-messages', label: 'Buyer messages' },
-          { ...navItems[3], path: '/#seller-feedback', label: 'Buyer feedback' },
+          { ...navItems[0], path: '/seller/sales', label: 'Sales summary' },
+          { ...navItems[2], path: '/seller/submit', label: 'Submit products' },
+          { ...navItems[2], path: '/seller/products', label: 'My products' },
+          { ...navItems[6], path: '/seller/orders', label: 'Student reservations' },
+          { ...navItems[6], path: '/seller/messages', label: 'Buyer messages' },
+          { ...navItems[3], path: '/seller/feedback', label: 'Buyer feedback' },
         ];
   const initials = String(user?.name || 'Campus Member').split(' ').map((part) => part[0]).slice(0, 2).join('');
 
@@ -113,8 +113,7 @@ const Layout = ({ children }) => {
         
         <nav className="flex flex-1 flex-col gap-y-1 px-3 py-4">
           {navForRole.map((item) => {
-            const [itemPath, itemHash] = item.path.split('#');
-            const isActive = location.pathname === itemPath && (itemHash ? location.hash === `#${itemHash}` : !location.hash);
+            const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.path}

@@ -49,14 +49,17 @@ const AccountRoutes = () => (
     <Route path="/categories" element={<ProtectedPage roles={['admin']}><CategoriesPage /></ProtectedPage>} />
     <Route path="/users" element={<ProtectedPage roles={['admin']}><UsersPage /></ProtectedPage>} />
     <Route path="/orders" element={<ProtectedPage roles={['admin']}><OrdersPage /></ProtectedPage>} />
+    <Route path="/seller/:section" element={<ProtectedHome expectedRole="seller" />} />
+    <Route path="/student/:section" element={<ProtectedHome expectedRole="student" />} />
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );
 
-const ProtectedHome = () => {
+const ProtectedHome = ({ expectedRole }) => {
   const { user, loading } = useAuth();
   if (loading) return <LoadingPage />;
   if (!user) return <Navigate to="/login" replace />;
+  if (expectedRole && user.role !== expectedRole) return <Navigate to="/" replace />;
   return <Layout>{user.role === 'admin' ? <Dashboard /> : <RoleHomePage user={user} />}</Layout>;
 };
 
