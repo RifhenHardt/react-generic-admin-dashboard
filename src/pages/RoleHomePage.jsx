@@ -6,6 +6,37 @@ import StatusBadge from '../components/common/StatusBadge';
 
 const categories = ['All categories', 'Food & Drinks', 'Clothing', 'Wearable Accessories', 'Souvenirs', 'Arts & Crafts', 'Project Products'];
 const loadAll = (entityName) => mockApi.getAll(entityName, { page: 1, pageSize: 200 });
+const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
+
+const compressProductImage = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onerror = () => reject(new Error('Could not read this image. Please choose another file.'));
+  reader.onload = () => {
+    const image = new Image();
+    image.onerror = () => reject(new Error('This image could not be opened.'));
+    image.onload = () => {
+      const scale = Math.min(1, 1200 / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const context = canvas.getContext('2d');
+      if (!context) return reject(new Error('Image processing is not available in this browser.'));
+      context.fillStyle = '#fff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        if (!blob) return reject(new Error('Could not prepare this image for storage.'));
+        const output = new FileReader();
+        output.onerror = () => reject(new Error('Could not prepare this image for storage.'));
+        output.onload = () => resolve(output.result);
+        output.readAsDataURL(blob);
+      }, 'image/jpeg', 0.82);
+    };
+    image.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
 const money = (value) => `₱${Number(value || 0).toFixed(2)}`;
 
 async function marketplaceRequest(path, options = {}) {
@@ -44,6 +75,7 @@ const RoleHomePage = ({ user }) => {
   const [replyDrafts, setReplyDrafts] = useState({});
   const [reviewDrafts, setReviewDrafts] = useState({});
   const [notice, setNotice] = useState('');
+  const [imageUploadMessage, setImageUploadMessage] = useState('');
   const [listingForm, setListingForm] = useState({ title: '', category: categories[1], event: '', booth: '', price: '', stock: '', reorderAt: 5, imageUrl: '', description: '' });
   const { data: listingsData, isLoading: listingsLoading } = useQuery({ queryKey: ['listings', 'account-home'], queryFn: () => loadAll('listings') });
   const { data: eventsData } = useQuery({ queryKey: ['events', 'account-home'], queryFn: () => loadAll('events') });
@@ -211,6 +243,27 @@ const RoleHomePage = ({ user }) => {
     saveListingMutation.mutate(listingForm);
   };
   const updateListingField = (event) => setListingForm((current) => ({ ...current, [event.target.name]: event.target.value }));
+  const uploadProductImage = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    setImageUploadMessage('');
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setImageUploadMessage('Choose a JPG, PNG, or WebP image.');
+      return;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      setImageUploadMessage('Image must be 8 MB or smaller.');
+      return;
+    }
+    try {
+      const imageUrl = await compressProductImage(file);
+      setListingForm((current) => ({ ...current, imageUrl }));
+      setImageUploadMessage('Image ready. It will be saved in this browser with your product.');
+    } catch (error) {
+      setImageUploadMessage(error.message);
+    }
+  };
   const editListing = (product) => {
     setEditingListingId(product.id);
     setListingForm({ title: product.title, category: product.category, event: product.event, booth: product.booth, price: product.price, stock: product.stock, reorderAt: product.reorderAt ?? 5, imageUrl: product.imageUrl || '', description: product.description || '' });
@@ -263,7 +316,14 @@ const RoleHomePage = ({ user }) => {
             <form onSubmit={submitListing} className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="text-sm font-medium text-gray-700">Product name<input name="title" value={listingForm.title} onChange={updateListingField} required maxLength={100} placeholder="e.g., Ube Cheese Pandesal" className="input-field mt-1" /></label>
               <label className="text-sm font-medium text-gray-700">Category<select name="category" value={listingForm.category} onChange={updateListingField} className="input-field mt-1">{categories.slice(1).map((item) => <option key={item}>{item}</option>)}</select></label>
-              <label className="text-sm font-medium text-gray-700">Product photo URL (optional)<input name="imageUrl" type="url" value={listingForm.imageUrl} onChange={updateListingField} placeholder="https://example.com/product-photo.jpg" className="input-field mt-1" /></label>
+              <div className="text-sm font-medium text-gray-700">
+                <label htmlFor="product-photo-upload">Upload product photo (optional)</label>
+                <input id="product-photo-upload" type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadProductImage} className="input-field mt-1 file:mr-3 file:rounded-md file:border-0 file:bg-primary-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-primary-800" />
+                <p className="mt-1 text-xs font-normal text-gray-500">JPG, PNG, or WebP up to 8 MB. The image is resized and stored with this browser’s product data.</p>
+                {imageUploadMessage && <p role="status" className="mt-1 text-xs font-normal text-primary-800">{imageUploadMessage}</p>}
+                {listingForm.imageUrl && <div className="mt-2 flex items-center gap-3"><img src={listingForm.imageUrl} alt="Product preview" className="h-16 w-16 rounded-lg border border-gray-200 object-cover" /><button type="button" onClick={() => { setListingForm((current) => ({ ...current, imageUrl: '' })); setImageUploadMessage('Photo removed.'); }} className="text-xs font-semibold text-red-700">Remove photo</button></div>}
+              </div>
+              <label className="text-sm font-medium text-gray-700">Or use a photo URL<input name="imageUrl" type="url" value={listingForm.imageUrl.startsWith('data:') ? '' : listingForm.imageUrl} onChange={updateListingField} placeholder="https://example.com/product-photo.jpg" className="input-field mt-1" /></label>
               <label className="text-sm font-medium text-gray-700">Campus event<select name="event" value={listingForm.event} onChange={updateListingField} required className="input-field mt-1"><option value="">Choose an event</option>{events.map((event) => <option key={event.id} value={event.name}>{event.name}</option>)}</select></label>
               <label className="text-sm font-medium text-gray-700">Booth or pickup location<input name="booth" value={listingForm.booth} onChange={updateListingField} required placeholder="e.g., Booth A-04" className="input-field mt-1" /></label>
               <label className="text-sm font-medium text-gray-700">Price (₱)<input name="price" type="number" min="0.01" step="0.01" value={listingForm.price} onChange={updateListingField} required placeholder="e.g., 50.00" className="input-field mt-1" /></label>
