@@ -6,6 +6,10 @@ import StatusBadge from '../components/common/StatusBadge';
 
 const categories = ['All categories', 'Food & Drinks', 'Clothing', 'Wearable Accessories', 'Souvenirs', 'Arts & Crafts', 'Project Products'];
 const loadAll = (entityName) => mockApi.getAll(entityName, { page: 1, pageSize: 200 });
+const loadListings = async () => {
+  const { listings = [] } = await marketplaceRequest('/api/market/listings');
+  return { items: listings, total: listings.length, totalPages: 1, currentPage: 1 };
+};
 const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
 
 const compressProductImage = (file) => new Promise((resolve, reject) => {
@@ -77,7 +81,7 @@ const RoleHomePage = ({ user }) => {
   const [notice, setNotice] = useState('');
   const [imageUploadMessage, setImageUploadMessage] = useState('');
   const [listingForm, setListingForm] = useState({ title: '', category: categories[1], event: '', booth: '', price: '', stock: '', reorderAt: 5, imageUrl: '', description: '' });
-  const { data: listingsData, isLoading: listingsLoading } = useQuery({ queryKey: ['listings', 'account-home'], queryFn: () => loadAll('listings') });
+  const { data: listingsData, isLoading: listingsLoading } = useQuery({ queryKey: ['listings', 'account-home'], queryFn: loadListings });
   const { data: eventsData } = useQuery({ queryKey: ['events', 'account-home'], queryFn: () => loadAll('events') });
   const { data: ordersData } = useQuery({ queryKey: ['orders', 'account-home'], queryFn: () => loadAll('orders') });
   const { data: messagesData } = useQuery({ queryKey: ['messages', 'account-home', user.id], queryFn: () => marketplaceRequest('/api/market/messages') });
@@ -122,7 +126,8 @@ const RoleHomePage = ({ user }) => {
     mutationFn: async ({ product, quantity }) => {
       if (user.status !== 'active') throw new Error('Your student account must be active to reserve products.');
       if (quantity < 1 || quantity > Number(product.stock)) throw new Error('Choose a quantity that is currently in stock.');
-      const updated = await mockApi.update('listings', product.id, { stock: Number(product.stock) - quantity, status: Number(product.stock) === quantity ? 'sold out' : product.status });
+      const updatedStock = Number(product.stock) - quantity;
+      await marketplaceRequest(`/api/market/listings/${product.id}`, { method: 'PATCH', body: JSON.stringify({ stock: updatedStock, status: updatedStock === 0 ? 'sold out' : product.status }) });
       try {
         return await mockApi.create('orders', {
           customer: user.name,
@@ -136,7 +141,7 @@ const RoleHomePage = ({ user }) => {
           status: 'requested',
         });
       } catch (error) {
-        await mockApi.update('listings', product.id, { stock: Number(updated.stock) + quantity, status: product.status });
+        await marketplaceRequest(`/api/market/listings/${product.id}`, { method: 'PATCH', body: JSON.stringify({ stock: Number(product.stock), status: product.status }) });
         throw error;
       }
     },
@@ -148,7 +153,7 @@ const RoleHomePage = ({ user }) => {
       if (order.status !== 'requested') throw new Error('Only a requested reservation can be cancelled.');
       await mockApi.update('orders', order.id, { status: 'cancelled' });
       const product = products.find((item) => item.id === order.listingId);
-      if (product) await mockApi.update('listings', product.id, { stock: Number(product.stock) + Number(order.quantity), status: 'active' });
+      if (product) await marketplaceRequest(`/api/market/listings/${product.id}`, { method: 'PATCH', body: JSON.stringify({ stock: Number(product.stock) + Number(order.quantity), status: 'active' }) });
     },
     onSuccess: () => { setNotice('Reservation cancelled.'); refreshData(); },
     onError: (error) => setNotice(error.message),
@@ -172,9 +177,9 @@ const RoleHomePage = ({ user }) => {
       if (editingListingId) {
         const listing = teamProducts.find((item) => item.id === editingListingId);
         if (!listing) throw new Error('You can only edit products submitted by your team.');
-        return mockApi.update('listings', editingListingId, { ...details, status: 'active' });
+        return marketplaceRequest(`/api/market/listings/${editingListingId}`, { method: 'PATCH', body: JSON.stringify({ ...details, status: 'active' }) });
       }
-      return mockApi.create('listings', { ...details, status: 'active' });
+      return marketplaceRequest('/api/market/listings', { method: 'POST', body: JSON.stringify({ ...details, status: 'active' }) });
     },
     onSuccess: () => {
       setNotice(editingListingId ? 'Product changes saved and are now live in the marketplace.' : 'Product added and now live in the marketplace.');
@@ -185,12 +190,12 @@ const RoleHomePage = ({ user }) => {
     onError: (error) => setNotice(error.message),
   });
   const deleteListingMutation = useMutation({
-    mutationFn: (product) => {
+    mutationFn: async (product) => {
       if (product.sellerTeam?.trim().toLowerCase() !== user.teamName?.trim().toLowerCase()) throw new Error('You can only remove products from your own seller team.');
       if (orders.some((order) => order.listingId === product.id && ['requested', 'accepted', 'ready for pickup'].includes(order.status))) {
         throw new Error('This product has open reservations. Complete or decline them before removing the product.');
       }
-      return mockApi.delete('listings', product.id);
+      return marketplaceRequest(`/api/market/listings/${product.id}`, { method: 'DELETE' });
     },
     onSuccess: () => { setNotice('Product removed from your catalog.'); refreshData(); },
     onError: (error) => setNotice(error.message),
@@ -233,7 +238,7 @@ const RoleHomePage = ({ user }) => {
     onError: (error) => setNotice(error.message),
   });
   const stockMutation = useMutation({
-    mutationFn: ({ product, stock, reorderAt }) => mockApi.update('listings', product.id, { stock, reorderAt, status: stock === 0 ? 'sold out' : product.status === 'sold out' ? 'active' : product.status }),
+    mutationFn: ({ product, stock, reorderAt }) => marketplaceRequest(`/api/market/listings/${product.id}`, { method: 'PATCH', body: JSON.stringify({ stock, reorderAt, status: stock === 0 ? 'sold out' : product.status === 'sold out' ? 'active' : product.status }) }),
     onSuccess: () => { setNotice('Product quantity updated.'); refreshData(); },
     onError: (error) => setNotice(error.message),
   });

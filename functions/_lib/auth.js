@@ -19,11 +19,13 @@ export function isSameOrigin(request) {
   return request.headers.get('Sec-Fetch-Site') !== 'cross-site';
 }
 
-export async function readJson(request) {
+export async function readJson(request, maxBytes = 8192) {
   const contentLength = Number(request.headers.get('Content-Length') || 0);
-  if (contentLength > 8192) return null;
+  if (contentLength > maxBytes) return null;
   try {
-    return await request.json();
+    const text = await request.text();
+    if (new TextEncoder().encode(text).byteLength > maxBytes) return null;
+    return JSON.parse(text);
   } catch {
     return null;
   }
