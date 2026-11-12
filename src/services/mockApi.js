@@ -18,6 +18,15 @@ const storageKey = (entityName) => `campus-market-v2:${entityName}`;
 const readEntity = (entityName) => getFromStorage(storageKey(entityName));
 const writeEntity = (entityName, data) => saveToStorage(storageKey(entityName), data);
 const today = () => new Date().toISOString().slice(0, 10);
+const defaultListingKeys = new Set([
+  'Ube Cheese Pandesal|BSEd Food Craft Team|2026-11-04',
+  'Campus Fest Shirt|Student Council Merchandise|2026-11-03',
+  'Beaded Phone Charms|Crafts for a Cause|2026-11-02',
+  'Mini Campus Keychains|BS Architecture Project Group|2026-11-01',
+  'Brownie Box|Bake Sale for Scholars|2026-10-31',
+  'Hand-painted Tote Bag|Fine Arts Studio|2026-10-30',
+  'School Spirit Pin Set|Campus Creatives|2026-10-29',
+]);
 
 const normalizeItem = (entityName, item) => {
   const normalized = { ...item };
@@ -40,9 +49,18 @@ const initializeData = () => {
     if (!readEntity(entityName)) writeEntity(entityName, seedData);
   });
 
-  // Publish listings from verified sellers even if they were created under the old review-required flow.
+  // Remove the old demo listings from browsers that already have the seeded data saved.
   const listings = readEntity('listings') || [];
   let migrated = false;
+  const userListings = listings.filter((listing) => !defaultListingKeys.has(
+    `${listing.title}|${listing.sellerTeam}|${listing.submissionDate}`,
+  ));
+  if (userListings.length !== listings.length) {
+    listings.splice(0, listings.length, ...userListings);
+    migrated = true;
+  }
+
+  // Publish listings from verified sellers even if they were created under the old review-required flow.
   listings.forEach((listing) => {
     if (!listing.sellerName) {
       const seller = (mockData.users || []).find((user) => user.teamName?.trim().toLowerCase() === listing.sellerTeam?.trim().toLowerCase());

@@ -1,13 +1,5 @@
 {
-  "listings": [
-    { "id": 1, "title": "Ube Cheese Pandesal", "sellerTeam": "BSEd Food Craft Team", "sellerVerified": true, "category": "Food & Drinks", "event": "Campus Makers Fair", "booth": "A-04", "price": 35, "stock": 48, "submissionDate": "2026-11-04", "status": "active", "description": "Freshly baked ube pandesal with cheese filling." },
-    { "id": 2, "title": "Campus Fest Shirt", "sellerTeam": "Student Council Merchandise", "sellerVerified": true, "category": "Clothing", "event": "Foundation Week Bazaar", "booth": "B-02", "price": 280, "stock": 25, "submissionDate": "2026-11-03", "status": "active", "description": "Original event shirt, available in assorted sizes." },
-    { "id": 3, "title": "Beaded Phone Charms", "sellerTeam": "Crafts for a Cause", "sellerVerified": true, "category": "Wearable Accessories", "event": "Campus Makers Fair", "booth": "A-11", "price": 90, "stock": 32, "submissionDate": "2026-11-02", "status": "pending", "description": "Handmade colorful phone charms and wrist straps." },
-    { "id": 4, "title": "Mini Campus Keychains", "sellerTeam": "BS Architecture Project Group", "sellerVerified": false, "category": "Souvenirs", "event": "Computing & Design Expo", "booth": "C-08", "price": 60, "stock": 40, "submissionDate": "2026-11-01", "status": "pending", "description": "Laser-cut miniature campus landmark keychains." },
-    { "id": 5, "title": "Brownie Box", "sellerTeam": "Bake Sale for Scholars", "sellerVerified": true, "category": "Food & Drinks", "event": "Foundation Week Bazaar", "booth": "B-07", "price": 120, "stock": 18, "submissionDate": "2026-10-31", "status": "active", "description": "Four-piece brownie box. Contains dairy, eggs, and wheat." },
-    { "id": 6, "title": "Hand-painted Tote Bag", "sellerTeam": "Fine Arts Studio", "sellerVerified": true, "category": "Arts & Crafts", "event": "Campus Makers Fair", "booth": "A-15", "price": 220, "stock": 0, "submissionDate": "2026-10-30", "status": "sold out", "description": "Hand-painted reusable canvas tote bags." },
-    { "id": 7, "title": "School Spirit Pin Set", "sellerTeam": "Campus Creatives", "sellerVerified": false, "category": "Wearable Accessories", "event": "Computing & Design Expo", "booth": "C-03", "price": 75, "stock": 0, "submissionDate": "2026-10-29", "status": "rejected", "description": "Three-piece enamel-style school spirit pin set." }
-  ],
+  "listings": [],
   "events": [
     { "id": 1, "name": "Campus Makers Fair", "date": "2026-11-12", "location": "Student Center Courtyard", "status": "upcoming", "description": "A campus market for student-made goods and project teams." },
     { "id": 2, "name": "Foundation Week Bazaar", "date": "2026-11-20", "location": "Main Quad", "status": "upcoming", "description": "Food, apparel, and fundraising booths during Foundation Week." },
